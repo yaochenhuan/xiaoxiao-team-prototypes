@@ -278,6 +278,7 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                   <table className="w-full text-[10px]">
                     <thead>
                       <tr className="bg-gray-50 text-gray-500 text-left">
+                        <th className="px-2 py-1.5 font-normal w-8"></th>
                         <th className="px-2 py-1.5 font-normal">内容</th>
                         <th className="px-2 py-1.5 font-normal">分项</th>
                         <th className="px-2 py-1.5 font-normal">级别</th>
@@ -299,6 +300,9 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                         { content: 'Q: Tom ____ in the library every night over the last three months.', type: '阅读', level: '-', format: 'Complete the Words', errCount: '3' }
                       ].map((row, i) => (
                         <tr key={i} className="border-t border-gray-100">
+                          <td className="px-2 py-2">
+                            <span className="w-3 h-3 rounded border border-gray-300 bg-white inline-block" />
+                          </td>
                           <td className="px-2 py-2">
                             <div className="flex items-start gap-1">
                               <span className="w-2.5 h-2.5 rounded-sm bg-brand/20 mt-0.5" />
@@ -323,6 +327,15 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                       ))}
                     </tbody>
                   </table>
+                  {/* Batch action bar */}
+                  <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 bg-gray-50">
+                    <span className="text-[10px] text-gray-500">已选 0 项</span>
+                    <div className="flex items-center gap-2">
+                      <button className="px-3 py-1 text-[10px] bg-brand text-white rounded">开始练习</button>
+                      <button className="px-3 py-1 text-[10px] border border-brand text-brand rounded">查看/订正</button>
+                      <button className="px-3 py-1 text-[10px] border border-gray-300 text-gray-500 rounded">移除错题</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

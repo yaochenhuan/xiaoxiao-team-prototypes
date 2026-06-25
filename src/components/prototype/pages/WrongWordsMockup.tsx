@@ -128,8 +128,11 @@ export default function WrongWordsMockup({ featureCode, pageIndex }: WrongWordsM
               <div className="grid grid-cols-2 gap-2">
                 {wordList.map((item, idx) => (
                   <div key={idx} className="border border-gray-200 rounded p-2.5 relative">
+                    <div className="absolute top-2 left-2">
+                      <span className="w-3 h-3 rounded border border-gray-300 bg-white inline-block" />
+                    </div>
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center justify-between mb-1 pl-4">
                       <span className="text-xs font-semibold text-gray-800">{item.word}</span>
                       <div className="flex items-center gap-1 text-[9px] text-gray-400">
                         <span>错误数: {item.errCount}</span>
@@ -163,6 +166,12 @@ export default function WrongWordsMockup({ featureCode, pageIndex }: WrongWordsM
                 <span className="px-1.5 py-0.5 rounded">3</span>
                 <span>...</span>
                 <span className="px-1.5 py-0.5 rounded">10</span>
+              </div>
+
+              {/* Batch action bar */}
+              <div className="flex items-center justify-between mt-3 px-3 py-2 border-t border-gray-200 bg-gray-50 rounded">
+                <span className="text-[10px] text-gray-500">已选 0 个</span>
+                <button className="px-3 py-1 text-[10px] border border-gray-300 text-gray-500 rounded">移除错词</button>
               </div>
             </div>
           </div>
