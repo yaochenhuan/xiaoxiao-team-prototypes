@@ -57,7 +57,7 @@ export default function BaseTrainingMockup({ featureCode, pageIndex }: BaseTrain
               <div className="grid grid-cols-3 gap-3 p-4">
                 <div className="border border-gray-200 rounded-lg p-3">
                   <p className="text-[10px] text-gray-500 mb-1">我的进步</p>
-                  <p className="text-[10px] text-green-500 mb-2">特复率 -18%</p>
+                  <p className="text-[10px] text-green-500 mb-2">修复率 +18%</p>
                   <svg viewBox="0 0 180 48" className="w-full h-12" preserveAspectRatio="none">
                     <polyline
                       fill="none"
@@ -71,91 +71,75 @@ export default function BaseTrainingMockup({ featureCode, pageIndex }: BaseTrain
                     />
                   </svg>
                   <div className="flex justify-between text-[9px] text-gray-400 mt-1">
-                    <span>已快复错 30</span>
-                    <span>聚宝宝 30</span>
-                    <span>未习词数 30</span>
+                    <span>总修复错题 30</span>
+                    <span>本周修复错题 30</span>
                   </div>
                 </div>
 
                 <div className="border border-gray-200 rounded-lg p-3">
-                  <p className="text-[10px] text-gray-500 mb-1">Top高错点</p>
+                  <p className="text-[10px] text-gray-500 mb-1">我的错误归因</p>
                   <div className="flex items-center gap-3">
                     {/* Donut chart */}
-                    <div className="w-16 h-16 rounded-full border-4 border-purple-500 flex items-center justify-center text-[10px] font-bold text-gray-700">
-                      <div className="text-center">
-                        <div>4词</div>
-                        <div>90%</div>
-                      </div>
-                    </div>
+                    <svg viewBox="0 0 42 42" className="w-16 h-16 -rotate-90">
+                      <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#E5E7EB" strokeWidth="5" />
+                      <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#2563EB" strokeWidth="5" strokeDasharray="38 62" strokeDashoffset="0" />
+                      <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#60A5FA" strokeWidth="5" strokeDasharray="27 73" strokeDashoffset="-38" />
+                      <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#C084FC" strokeWidth="5" strokeDasharray="21 79" strokeDashoffset="-65" />
+                      <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#BFDBFE" strokeWidth="5" strokeDasharray="14 86" strokeDashoffset="-86" />
+                    </svg>
                     <div className="flex-1 space-y-1 text-[9px]">
                       <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-sm bg-purple-500" />
+                        <span className="w-2 h-2 rounded-sm bg-blue-600" />
                         <span className="text-gray-600">词根词缀</span>
                         <span className="ml-auto text-gray-500">38%</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-sm bg-purple-300" />
-                        <span className="text-gray-600">我的词根混淆</span>
-                        <span className="ml-auto text-gray-500">23%</span>
+                        <span className="w-2 h-2 rounded-sm bg-blue-400" />
+                        <span className="text-gray-600">词根混淆</span>
+                        <span className="ml-auto text-gray-500">27%</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-sm bg-purple-200" />
-                        <span className="text-gray-600">熟词生意</span>
-                        <span className="ml-auto text-gray-500">25%</span>
+                        <span className="w-2 h-2 rounded-sm bg-purple-400" />
+                        <span className="text-gray-600">熟词生义</span>
+                        <span className="ml-auto text-gray-500">21%</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-sm bg-purple-100" />
+                        <span className="w-2 h-2 rounded-sm bg-blue-200" />
                         <span className="text-gray-600">拼写错误</span>
                         <span className="ml-auto text-gray-500">14%</span>
                       </div>
                     </div>
                   </div>
-                  <p className="text-[9px] text-gray-400 mt-2">最主要错因：学习不误</p>
+                  <p className="text-[9px] text-gray-400 mt-2">最主要问题：词根词缀</p>
                 </div>
 
                 <div className="border border-gray-200 rounded-lg p-3">
-                  <p className="text-[10px] text-gray-500 mb-1">新词汇掌握度建议</p>
-                  <p className="text-[9px] text-gray-400 mb-1">最需要你掌握的词</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-[10px] text-gray-500">知识点修复建议</p>
+                    <span className="px-1 rounded bg-red-100 text-red-500 text-[8px]">特加强</span>
+                  </div>
+                  <p className="text-[9px] text-gray-400 mb-1">最需要修补的知识点</p>
                   <div className="space-y-1 text-[9px]">
                     <div className="flex items-center gap-1">
-                      <span className="text-gray-600">新词</span>
-                      <span className="px-1 rounded bg-red-100 text-red-500 text-[8px]">特加强</span>
+                      <span className="text-gray-600 w-20 truncate">新词</span>
                       <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-red-400 rounded" style={{ width: '78%' }} />
+                        <div className="h-full bg-blue-500 rounded" style={{ width: '78%' }} />
                       </div>
-                      <span className="text-gray-500">78%</span>
+                      <span className="text-gray-500 w-6 text-right">78%</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-gray-600">词性</span>
-                      <span className="px-1 rounded bg-orange-100 text-orange-500 text-[8px]">加强</span>
+                      <span className="text-gray-600 w-20 truncate">词性</span>
                       <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-orange-400 rounded" style={{ width: '72%' }} />
+                        <div className="h-full bg-blue-500 rounded" style={{ width: '72%' }} />
                       </div>
-                      <span className="text-gray-500">72%</span>
+                      <span className="text-gray-500 w-6 text-right">72%</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-gray-600">新词</span>
-                      <span className="px-1 rounded bg-red-100 text-red-500 text-[8px]">特加强</span>
+                      <span className="text-gray-600 w-20 truncate">同义词</span>
                       <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-red-400 rounded" style={{ width: '68%' }} />
+                        <div className="h-full bg-blue-500 rounded" style={{ width: '68%' }} />
                       </div>
-                      <span className="text-gray-500">68%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-gray-600">同义词</span>
-                      <span className="px-1 rounded bg-yellow-100 text-yellow-600 text-[8px]">关注</span>
-                      <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-yellow-400 rounded" style={{ width: '55%' }} />
-                      </div>
-                      <span className="text-gray-500">55%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-gray-600">短语</span>
-                      <span className="px-1 rounded bg-yellow-100 text-yellow-600 text-[8px]">关注</span>
-                      <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-yellow-400 rounded" style={{ width: '43%' }} />
-                      </div>
-                      <span className="text-gray-500">43%</span>
+                      <span className="text-gray-500 w-6 text-right">68%</span>
                     </div>
                   </div>
                 </div>
