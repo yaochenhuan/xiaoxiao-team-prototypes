@@ -60,15 +60,18 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                 <div className="border border-gray-200 rounded-lg p-3">
                   <p className="text-[10px] text-gray-500 mb-1">我的进步</p>
                   <p className="text-[10px] text-green-500 mb-2">待复率 -18%</p>
-                  <div className="h-12 flex items-end gap-0.5">
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 bg-teal-200 rounded-sm"
-                        style={{ height: `${20 + Math.random() * 80}%` }}
-                      />
-                    ))}
-                  </div>
+                  <svg viewBox="0 0 180 48" className="w-full h-12" preserveAspectRatio="none">
+                    <polyline
+                      fill="none"
+                      stroke="#0B57D0"
+                      strokeWidth="1.5"
+                      points="0,42 9,38 18,35 27,30 36,28 45,25 54,22 63,18 72,15 81,12 90,10 99,7 108,8 117,10 126,14 135,16 144,20 153,18 162,14 171,10 180,8"
+                    />
+                    <polygon
+                      fill="rgba(11,87,208,0.08)"
+                      points="0,42 9,38 18,35 27,30 36,28 45,25 54,22 63,18 72,15 81,12 90,10 99,7 108,8 117,10 126,14 135,16 144,20 153,18 162,14 171,10 180,8 180,48 0,48"
+                    />
+                  </svg>
                   <div className="flex justify-between text-[9px] text-gray-400 mt-1">
                     <span>总做题数 30</span>
                     <span>本周做题数 30</span>
@@ -76,7 +79,7 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                 </div>
 
                 <div className="border border-gray-200 rounded-lg p-3">
-                  <p className="text-[10px] text-gray-500 mb-1">我的错题巩固</p>
+                  <p className="text-[10px] text-gray-500 mb-1">Top高错点</p>
                   <div className="flex items-center gap-3">
                     {/* Donut chart */}
                     <div className="w-16 h-16 rounded-full border-4 border-blue-500 flex items-center justify-center text-[10px] font-bold text-gray-700">
@@ -125,9 +128,9 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                     </div>
                     <div className="flex items-center gap-1">
                       <span className="text-gray-600">函数与图像</span>
-                      <span className="px-1 rounded bg-red-100 text-red-500 text-[8px]">特加强</span>
+                      <span className="px-1 rounded bg-orange-100 text-orange-500 text-[8px]">加强</span>
                       <div className="flex-1 h-1.5 bg-gray-100 rounded">
-                        <div className="h-full bg-red-400 rounded" style={{ width: '72%' }} />
+                        <div className="h-full bg-orange-400 rounded" style={{ width: '72%' }} />
                       </div>
                       <span className="text-gray-500">72%</span>
                     </div>
@@ -139,6 +142,22 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                       </div>
                       <span className="text-gray-500">68%</span>
                     </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-gray-600">几何证明</span>
+                      <span className="px-1 rounded bg-yellow-100 text-yellow-600 text-[8px]">关注</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded">
+                        <div className="h-full bg-yellow-400 rounded" style={{ width: '55%' }} />
+                      </div>
+                      <span className="text-gray-500">55%</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-gray-600">概率计算</span>
+                      <span className="px-1 rounded bg-yellow-100 text-yellow-600 text-[8px]">关注</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded">
+                        <div className="h-full bg-yellow-400 rounded" style={{ width: '43%' }} />
+                      </div>
+                      <span className="text-gray-500">43%</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -148,80 +167,92 @@ export default function RealExamMockup({ featureCode, pageIndex }: RealExamMocku
                 {/* Left tree */}
                 <div className="w-44 border border-gray-200 rounded-lg p-2 text-[10px] space-y-1.5 shrink-0">
                   <p className="font-medium text-gray-700 mb-1">知识点分类</p>
-                  <div className="flex items-center gap-1 text-gray-600">
-                    <span className="text-brand">▼</span>
-                    <span>全部知识点</span>
+                  <div className="flex items-center gap-1 text-gray-600 bg-blue-50 px-1 rounded">
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-brand flex items-center justify-center">
+                      <span className="text-white text-[7px]">✓</span>
+                    </span>
+                    <span className="text-brand font-medium">不限</span>
                     <span className="ml-auto text-gray-400">856</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▼</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>代数与函数</span>
                     <span className="ml-auto text-gray-400">186</span>
                   </div>
                   <div className="ml-3 space-y-1">
                     <div className="flex items-center gap-1 bg-blue-50 px-1 rounded text-brand">
-                      <span>■</span>
+                      <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                       <span>一元二次函数</span>
                       <span className="ml-auto text-gray-400">68</span>
                     </div>
                     <div className="flex items-center gap-1 text-gray-600">
-                      <span>■</span>
+                      <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                       <span>不等式</span>
                       <span className="ml-auto text-gray-400">42</span>
                     </div>
                     <div className="flex items-center gap-1 text-gray-600">
-                      <span>■</span>
+                      <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                       <span>函数与图像</span>
                       <span className="ml-auto text-gray-400">38</span>
                     </div>
                     <div className="flex items-center gap-1 text-gray-600">
-                      <span>■</span>
+                      <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                       <span>指数和对数</span>
                       <span className="ml-auto text-gray-400">38</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>几何与图形</span>
                     <span className="ml-auto text-gray-400">142</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>统计与概率</span>
                     <span className="ml-auto text-gray-400">98</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>力学</span>
                     <span className="ml-auto text-gray-400">124</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>电磁学</span>
                     <span className="ml-auto text-gray-400">86</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>化学反应</span>
                     <span className="ml-auto text-gray-400">102</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>阅读理解</span>
                     <span className="ml-auto text-gray-400">118</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>写作技巧</span>
                     <span className="ml-auto text-gray-400">72</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>细胞生物学</span>
                     <span className="ml-auto text-gray-400">64</span>
                   </div>
                   <div className="flex items-center gap-1 text-gray-600">
                     <span className="text-brand">▶</span>
+                    <span className="w-3 h-3 rounded border border-gray-300 bg-white"></span>
                     <span>世界历史</span>
                     <span className="ml-auto text-gray-400">54</span>
                   </div>
