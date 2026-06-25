@@ -1,25 +1,21 @@
-import { useState, useEffect } from 'react'
-import { Outlet, useParams, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Outlet, useLocation } from 'react-router-dom'
 import AppLayout, { ViewMode } from '@/components/layout/AppLayout'
-import { features } from '@/data/features'
 
 export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('split')
-  const params = useParams<{ featureId: string }>()
-  const navigate = useNavigate()
+  const location = useLocation()
 
-  useEffect(() => {
-    if (!params?.featureId) {
-      const firstFeature = features[0]
-      if (firstFeature) {
-        navigate(firstFeature.route)
-      }
-    }
-  }, [params, navigate])
+  // Get current feature ID from URL path
+  const getCurrentFeatureId = () => {
+    const path = location.pathname
+    const featureId = path.split('/').filter(Boolean).join('-')
+    return featureId || 'homework-correction'
+  }
 
   return (
     <AppLayout
-      currentFeatureId={params?.featureId || ''}
+      currentFeatureId={getCurrentFeatureId()}
       viewMode={viewMode}
       onViewModeChange={setViewMode}
     >

@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System 可视化规范稿</title>
+<style>
+/* ============ CSS RESET & BASE ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Font */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", Roboto, Arial, sans-serif;
+  
+  /* Spacing */
+  --space-0: 0px; --space-4: 4px; --space-8: 8px; --space-12: 12px;
+  --space-16: 16px; --space-24: 24px; --space-32: 32px;
+  --space-40: 40px; --space-48: 48px; --space-64: 64px;
+  
+  /* Radius */
+  --radius-0: 0px; --radius-4: 4px; --radius-8: 8px; --radius-12: 12px;
+  --radius-16: 16px; --radius-20: 20px; --radius-28: 28px; --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-2: 0 2px 4px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.06);
+  --shadow-3: 0 4px 8px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.06);
+  --shadow-4: 0 8px 16px rgba(0,0,0,0.08), 0 16px 32px rgba(0,0,0,0.06);
+  --shadow-5: 0 16px 32px rgba(0,0,0,0.08), 0 32px 64px rgba(0,0,0,0.06);
+  
+  /* State Layer Opacities */
+  --hover-opacity: 0.08;
+  --focus-opacity: 0.12;
+  --pressed-opacity: 0.12;
+  --dragged-opacity: 0.16;
+  
+  /* Default BLUE Theme */
+  --primary: #0B57D0; --on-primary: #FFFFFF; --primary-container: #D3E3FD;
+  --on-primary-container: #041E49; --inverse-primary: #A8C7FA;
+  --secondary: #00639B; --on-secondary: #FFFFFF; --secondary-container: #C2E7FF;
+  --on-secondary-container: #001D35; --tertiary: #146C2E; --on-tertiary: #FFFFFF;
+  --tertiary-container: #C4EED0; --on-tertiary-container: #072711;
+  --error: #B3261E; --on-error: #FFFFFF; --error-container: #F9DEDC;
+  --on-error-container: #410E0B; --surface: #FFFFFF; --on-surface: #1F1F1F;
+  --surface-variant: #E1E3E1; --on-surface-variant: #44474E;
+  --outline: #C4C7C5; --outline-variant: #747775;
+  --surface-container-lowest: #FFFFFF; --surface-container-low: #F0F4F9;
+  --surface-container: #F8FAFD; --surface-container-high: #F0F4F9;
+  --surface-container-highest: #DDE3EA;
+  --text-1: #1F1F1F; --text-2: #44474E; --text-3: #747775;
+  --scrim: #000000; --shadow: #000000;
+  --success: #146C2E; --on-success: #FFFFFF; --success-container: #C4EED0;
+  --on-success-container: #072711; --warning: #FF5722; --on-warning: #FFFFFF;
+  --warning-container: #FFDBD1; --on-warning-container: #3B0900;
+  --info: #0B57D0; --on-info: #FFFFFF; --info-container: #D3E3FD;
+  --on-info-container: #041E49;
+  --bg: #FFFFFF;
+  --theme-badge: "USER_PROVIDED_TOKEN_FILE";
+  --theme-approximate: false;
+}
+
+/* PURPLE Theme */
+.theme-purple {
+  --primary: #6750A4; --on-primary: #FFFFFF; --primary-container: #EADDFF;
+  --on-primary-container: #21005D; --inverse-primary: #D0BCFF;
+  --secondary: #625B71; --on-secondary: #FFFFFF; --secondary-container: #E8DEF8;
+  --on-secondary-container: #1D192B; --tertiary: #7D5260; --on-tertiary: #FFFFFF;
+  --tertiary-container: #FFD8E4; --on-tertiary-container: #31111D;
+  --error: #B3261E; --on-error: #FFFFFF; --error-container: #F9DEDC;
+  --on-error-container: #410E0B; --surface: #FEF7FF; --on-surface: #1D1B20;
+  --surface-variant: #E8E0E8; --on-surface-variant: #49454F;
+  --outline: #CAC4D0; --outline-variant: #79747E;
+  --surface-container-lowest: #FFFFFF; --surface-container-low: #F3EDF7;
+  --surface-container: #F7F2FA; --surface-container-high: #ECE6F0;
+  --surface-container-highest: #E6E0E9;
+  --text-1: #1D1B20; --text-2: #49454F; --text-3: #79747E;
+  --scrim: #000000; --shadow: #000000;
+  --success: #146C2E; --on-success: #FFFFFF; --success-container: #C4EED0;
+  --on-success-container: #072711; --warning: #FF5722; --on-warning: #FFFFFF;
+  --warning-container: #FFDBD1; --on-warning-container: #3B0900;
+  --info: #6750A4; --on-info: #FFFFFF; --info-container: #EADDFF;
+  --on-info-container: #21005D;
+  --bg: #FEFBFF;
+  --theme-badge: "USER_PROVIDED_TOKEN_FILE";
+  --theme-approximate: false;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg);
+  color: var(--on-surface);
+  line-height: 1.5;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ============ NAVIGATION ============ */
+.nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: var(--surface); border-bottom: 1px solid var(--outline-variant);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--space-24); height: 60px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.nav-logo {
+  font-size: 18px; font-weight: 700; color: var(--primary);
+  display: flex; align-items: center; gap: var(--space-8);
+}
+
+.nav-links {
+  display: flex; gap: var(--space-8); overflow-x: auto; scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  padding: var(--space-8) var(--space-12); border-radius: var(--radius-8);
+  text-decoration: none; color: var(--text-2); font-size: 14px; font-weight: 500;
+  white-space: nowrap; transition: all 0.2s;
+}
+
+.nav-link:hover { background: rgba(var(--primary-rgb, 11,87,208), var(--hover-opacity)); color: var(--primary); }
+
+.nav-link.active { background: var(--primary-container); color: var(--on-primary-container); }
+
+.theme-switcher {
+  display: flex; gap: var(--space-8); align-items: center;
+}
+
+.theme-btn {
+  padding: 6px 14px; border-radius: var(--radius-8); border: 1px solid var(--outline);
+  background: var(--surface); color: var(--text-2); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-family);
+}
+
+.theme-btn:hover { background: var(--surface-variant); }
+
+.theme-btn.active {
+  background: var(--primary); color: var(--on-primary); border-color: var(--primary);
+}
+
+/* ============ LAYOUT ============ */
+main { padding-top: 60px; }
+
+.section {
+  max-width: 1280px; margin: 0 auto; padding: var(--space-48) var(--space-24);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.section-title {
+  font-size: 32px; font-weight: 700; color: var(--text-1); margin-bottom: var(--space-8);
+}
+
+.section-desc {
+  font-size: 16px; color: var(--text-3); margin-bottom: var(--space-32);
+}
+
+.approximate-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #FFF3E0; color: #E65100; border: 1px solid #FFB74D;
+  padding: 4px 10px; border-radius: var(--radius-8); font-size: 12px; font-weight: 600;
+  margin-bottom: var(--space-16);
+}
+
+.source-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.source-badge.pdf { background: #FFF3E0; color: #E65100; }
+.source-badge.user { background: #E8F5E9; color: #2E7D32; }
+.source-badge.m3 { background: #E3F2FD; color: #1565C0; }
+.source-badge.todo { background: #F5F5F5; color: #9E9E9E; border: 1px dashed #BDBDBD; }
+
+/* ============ COLOR OVERVIEW ============ */
+.color-overview-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.color-swatch {
+  border-radius: var(--radius-12); overflow: hidden; border: 1px solid var(--outline-variant);
+  box-shadow: var(--shadow-1); transition: transform 0.2s;
+}
+
+.color-swatch:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+
+.swatch-color { height: 80px; display: flex; align-items: center; justify-content: center; }
+
+.swatch-info { padding: var(--space-12); background: var(--surface); }
+
+.swatch-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+
+.swatch-hex { font-size: 11px; color: var(--text-3); font-family: monospace; }
+
+/* ============ PALETTE GRID ============ */
+.palette-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-24);
+}
+
+.palette-card {
+  border-radius: var(--radius-12); border: 1px solid var(--outline-variant);
+  overflow: hidden; background: var(--surface); box-shadow: var(--shadow-1);
+}
+
+.palette-header {
+  padding: var(--space-16); background: var(--surface-variant);
+  border-bottom: 1px solid var(--outline-variant);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.palette-title { font-size: 16px; font-weight: 700; color: var(--text-1); }
+
+.palette-row { display: flex; height: 36px; align-items: center; }
+
+.palette-tone { width: 40px; font-size: 11px; font-weight: 600; color: var(--text-3); text-align: center; }
+
+.palette-color { flex: 1; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+
+.palette-hex { width: 80px; font-size: 10px; color: var(--text-3); font-family: monospace; padding: 0 var(--space-8); }
+
+.palette-source { width: 24px; display: flex; align-items: center; justify-content: center; }
+
+/* ============ SEMANTIC TOKENS ============ */
+.semantic-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-12);
+}
+
+.semantic-card {
+  border-radius: var(--radius-12); border: 1px solid var(--outline-variant);
+  padding: var(--space-16); background: var(--surface); box-shadow: var(--shadow-1);
+}
+
+.semantic-preview { height: 56px; border-radius: var(--radius-8); margin-bottom: var(--space-12); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+
+.semantic-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+
+.semantic-value { font-size: 11px; color: var(--text-3); font-family: monospace; }
+
+/* ============ SURFACE LAYER ============ */
+.surface-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-16); }
+
+.surface-card {
+  border-radius: var(--radius-12); padding: var(--space-24); text-align: center;
+  border: 1px solid var(--outline-variant); min-height: 100px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.surface-card.todo { border-style: dashed; background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0,0,0,0.02) 8px, rgba(0,0,0,0.02) 16px); }
+
+.surface-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+
+.surface-value { font-size: 11px; color: var(--text-3); font-family: monospace; }
+
+/* ============ TYPOGRAPHY ============ */
+.type-grid { display: grid; gap: var(--space-24); }
+
+.type-row {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: var(--space-24); padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--outline-variant); align-items: start;
+}
+
+.type-info { display: flex; flex-direction: column; gap: 4px; }
+
+.type-token { font-size: 12px; font-weight: 600; color: var(--primary); font-family: monospace; }
+
+.type-spec { font-size: 12px; color: var(--text-3); }
+
+.type-sample { display: flex; flex-direction: column; gap: var(--space-8); }
+
+.type-cn { color: var(--text-1); }
+.type-en { color: var(--text-2); }
+.type-mixed { color: var(--text-1); }
+
+/* ============ SPACING / RADIUS / ELEVATION ============ */
+.foundation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-24); }
+
+.foundation-card {
+  border-radius: var(--radius-12); border: 1px solid var(--outline-variant);
+  padding: var(--space-24); background: var(--surface); box-shadow: var(--shadow-1);
+}
+
+.foundation-title { font-size: 16px; font-weight: 700; color: var(--text-1); margin-bottom: var(--space-16); }
+
+.spacing-row { display: flex; align-items: center; gap: var(--space-16); margin-bottom: var(--space-8); }
+
+.spacing-label { width: 40px; font-size: 12px; font-weight: 600; color: var(--text-2); }
+
+.spacing-bar { height: 24px; background: var(--primary); border-radius: var(--radius-4); }
+
+.spacing-value { font-size: 11px; color: var(--text-3); font-family: monospace; width: 60px; }
+
+.radius-row { display: flex; align-items: center; gap: var(--space-16); margin-bottom: var(--space-12); }
+
+.radius-preview {
+  width: 48px; height: 48px; background: var(--primary); display: flex; align-items: center; justify-content: center;
+  color: var(--on-primary); font-size: 10px; font-weight: 600;
+}
+
+.radius-label { font-size: 12px; font-weight: 600; color: var(--text-2); width: 60px; }
+
+.elevation-row { display: flex; align-items: center; gap: var(--space-16); margin-bottom: var(--space-16); }
+
+.elevation-card {
+  width: 80px; height: 80px; background: var(--surface); border-radius: var(--radius-8);
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--text-2);
+  border: 1px solid var(--outline-variant);
+}
+
+.state-row { display: flex; gap: var(--space-16); margin-bottom: var(--space-16); flex-wrap: wrap; }
+
+.state-demo {
+  padding: var(--space-12) var(--space-24); border-radius: var(--radius-8);
+  background: var(--primary); color: var(--on-primary); font-size: 14px; font-weight: 500;
+  position: relative; overflow: hidden;
+}
+
+.state-demo.hover::after { content: ""; position: absolute; inset: 0; background: var(--on-primary); opacity: var(--hover-opacity); }
+.state-demo.focus::after { content: ""; position: absolute; inset: 0; background: var(--on-primary); opacity: var(--focus-opacity); }
+.state-demo.pressed::after { content: ""; position: absolute; inset: 0; background: var(--on-primary); opacity: var(--pressed-opacity); }
+.state-demo.dragged::after { content: ""; position: absolute; inset: 0; background: var(--on-primary); opacity: var(--dragged-opacity); }
+
+.state-label { position: relative; z-index: 1; }
+
+/* ============ COMPONENTS ============ */
+.component-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: var(--space-24); }
+
+.component-card {
+  border-radius: var(--radius-12); border: 1px solid var(--outline-variant);
+  padding: var(--space-24); background: var(--surface); box-shadow: var(--shadow-1);
+}
+
+.component-title { font-size: 18px; font-weight: 700; color: var(--text-1); margin-bottom: var(--space-16); }
+
+.component-subtitle { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: var(--space-12); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.component-row { display: flex; gap: var(--space-12); margin-bottom: var(--space-16); flex-wrap: wrap; align-items: center; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8);
+  padding: 0 16px; height: 40px; border-radius: var(--radius-full);
+  font-size: 14px; font-weight: 500; font-family: var(--font-family);
+  cursor: pointer; border: none; transition: all 0.2s; position: relative; overflow: hidden;
+}
+
+.btn-filled { background: var(--primary); color: var(--on-primary); }
+.btn-filled:hover { box-shadow: var(--shadow-2); }
+.btn-filled::after { content: ""; position: absolute; inset: 0; background: var(--on-primary); opacity: 0; transition: opacity 0.2s; }
+.btn-filled:hover::after { opacity: var(--hover-opacity); }
+.btn-filled:active::after { opacity: var(--pressed-opacity); }
+
+.btn-outlined { background: transparent; color: var(--primary); border: 1px solid var(--outline); }
+.btn-outlined:hover { background: var(--primary-container); }
+
+.btn-text { background: transparent; color: var(--primary); padding: 0 12px; }
+.btn-text:hover { background: var(--primary-container); }
+
+.btn-tonal { background: var(--secondary-container); color: var(--on-secondary-container); }
+.btn-tonal:hover { box-shadow: var(--shadow-1); }
+
+.btn-elevated { background: var(--surface); color: var(--primary); box-shadow: var(--shadow-1); }
+.btn-elevated:hover { box-shadow: var(--shadow-2); }
+
+.btn-small { height: 28px; padding: 0 12px; font-size: 12px; }
+.btn-medium { height: 32px; padding: 0 12px; font-size: 13px; }
+.btn-large { height: 40px; padding: 0 16px; font-size: 14px; }
+
+.btn-disabled { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+
+.btn-icon { width: 40px; height: 40px; padding: 0; border-radius: var(--radius-full); }
+.btn-icon-small { width: 32px; height: 32px; }
+.btn-icon-large { width: 40px; height: 40px; }
+
+.fab { width: 56px; height: 56px; border-radius: var(--radius-16); background: var(--primary-container); color: var(--on-primary-container); box-shadow: var(--shadow-2); font-size: 24px; }
+
+/* Text Fields */
+.text-field {
+  position: relative; display: flex; align-items: center; width: 100%; max-width: 280px;
+  height: 56px; padding: 0 var(--space-16); border-radius: var(--radius-4) var(--radius-4) 0 0;
+  background: var(--surface-variant); border-bottom: 1px solid var(--on-surface-variant);
+  font-size: 16px; font-family: var(--font-family); color: var(--on-surface);
+  transition: border-color 0.2s; outline: none;
+}
+
+.text-field:focus { border-bottom: 2px solid var(--primary); }
+
+.text-field.outlined {
+  border-radius: var(--radius-4); border: 1px solid var(--outline); background: var(--surface); height: 48px;
+}
+
+.text-field.outlined:focus { border: 2px solid var(--primary); }
+
+.text-field.error { border-bottom-color: var(--error); }
+
+.text-field.small { height: 40px; font-size: 14px; }
+.text-field.medium { height: 48px; font-size: 15px; }
+.text-field.large { height: 56px; font-size: 16px; }
+
+.text-field-label {
+  position: absolute; left: var(--space-16); top: 8px; font-size: 11px; color: var(--text-3); pointer-events: none;
+}
+
+.text-field-value { margin-top: 12px; }
+
+.text-field-error-msg { font-size: 12px; color: var(--error); margin-top: 4px; }
+
+/* Selection Controls */
+.checkbox { width: 20px; height: 20px; border: 2px solid var(--on-surface-variant); border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.checkbox.checked { background: var(--primary); border-color: var(--primary); color: var(--on-primary); font-size: 12px; }
+.checkbox.indeterminate { background: var(--primary); border-color: var(--primary); }
+.checkbox.disabled { opacity: 0.38; cursor: not-allowed; }
+
+.radio { width: 20px; height: 20px; border: 2px solid var(--on-surface-variant); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.radio.selected { border-color: var(--primary); }
+.radio.selected::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+.radio.disabled { opacity: 0.38; cursor: not-allowed; }
+
+.switch { width: 52px; height: 32px; border-radius: 16px; background: var(--surface-variant); border: 2px solid var(--outline); cursor: pointer; position: relative; transition: all 0.2s; }
+.switch.on { background: var(--primary); border-color: var(--primary); }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow-1); transition: all 0.2s; }
+.switch.on::after { left: 22px; }
+.switch.small { width: 36px; height: 24px; border-radius: 12px; }
+.switch.small::after { width: 16px; height: 16px; top: 2px; left: 2px; }
+.switch.small.on::after { left: 16px; }
+.switch.large { width: 68px; height: 40px; border-radius: 20px; }
+.switch.large::after { width: 32px; height: 32px; top: 2px; left: 2px; }
+.switch.large.on::after { left: 32px; }
+.switch.disabled { opacity: 0.38; cursor: not-allowed; }
+
+/* Cards */
+.card { border-radius: var(--radius-12); padding: var(--space-16); background: var(--surface); border: 1px solid var(--outline-variant); box-shadow: var(--shadow-1); }
+.card-outlined { border: 1px solid var(--outline); box-shadow: none; }
+.card-elevated { box-shadow: var(--shadow-2); border: none; }
+.card-filled { background: var(--surface-variant); border: none; box-shadow: none; }
+.card-image { height: 140px; background: var(--surface-variant); border-radius: var(--radius-8) var(--radius-8) 0 0; margin: calc(-1 * var(--space-16)) calc(-1 * var(--space-16)) var(--space-16); display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 14px; }
+.card-title { font-size: 16px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+.card-body { font-size: 14px; color: var(--text-2); line-height: 1.5; }
+
+/* Table */
+.table-wrapper { border-radius: var(--radius-12); border: 1px solid var(--outline-variant); overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th { height: 58px; padding: 0 var(--space-16); text-align: left; font-weight: 600; color: var(--text-1); background: var(--surface-variant); border-bottom: 1px solid var(--outline-variant); }
+.table td { height: 54px; padding: 0 var(--space-16); color: var(--text-2); border-bottom: 1px solid var(--outline-variant); }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: var(--surface-container); }
+.table tr.selected td { background: var(--primary-container); color: var(--on-primary-container); }
+.table tr.selected:hover td { background: var(--primary-container); }
+
+/* Tabs */
+.tab-bar { display: flex; border-bottom: 1px solid var(--outline-variant); gap: var(--space-8); }
+.tab { padding: 0 var(--space-16); height: 48px; display: flex; align-items: center; gap: var(--space-8); font-size: 14px; font-weight: 500; color: var(--text-2); cursor: pointer; border-bottom: 2px solid transparent; position: relative; transition: all 0.2s; }
+.tab:hover { color: var(--text-1); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab.secondary { height: 40px; font-size: 13px; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.32); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+.modal { background: var(--surface); border-radius: var(--radius-28); width: 100%; max-width: 480px; padding: var(--space-24); box-shadow: var(--shadow-4); }
+.modal-title { font-size: 20px; font-weight: 700; color: var(--text-1); margin-bottom: var(--space-8); }
+.modal-body { font-size: 14px; color: var(--text-2); margin-bottom: var(--space-24); line-height: 1.6; }
+.modal-actions { display: flex; justify-content: flex-end; gap: var(--space-8); }
+
+/* Alert */
+.alert { border-radius: var(--radius-12); padding: var(--space-16); display: flex; align-items: flex-start; gap: var(--space-12); margin-bottom: var(--space-12); }
+.alert-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.alert-content { flex: 1; }
+.alert-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.alert-text { font-size: 13px; opacity: 0.8; }
+.alert-info { background: var(--surface-variant); border: 1px dashed var(--outline); color: var(--text-3); }
+.alert-info .alert-icon { background: var(--surface-variant); color: var(--text-3); border: 1px dashed var(--outline); }
+.alert-success { background: var(--surface-variant); border: 1px dashed var(--outline); color: var(--text-3); }
+.alert-success .alert-icon { background: var(--surface-variant); color: var(--text-3); border: 1px dashed var(--outline); }
+.alert-warning { background: var(--surface-variant); border: 1px dashed var(--outline); color: var(--text-3); }
+.alert-warning .alert-icon { background: var(--surface-variant); color: var(--text-3); border: 1px dashed var(--outline); }
+.alert-error { background: #FDEDED; color: var(--error); }
+.alert-error .alert-icon { background: var(--error); color: var(--on-error); }
+
+/* Badge */
+.badge { display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-full); font-size: 11px; font-weight: 600; }
+.badge-dot { width: 6px; height: 6px; background: var(--error); }
+.badge-small { height: 18px; padding: 0 6px; background: var(--error); color: var(--on-error); }
+.badge-large { height: 20px; padding: 0 8px; background: var(--error); color: var(--on-error); }
+.badge-secondary { background: var(--secondary-container); color: var(--on-secondary-container); }
+
+/* Avatar */
+.avatar { border-radius: 50%; background: var(--primary-container); color: var(--on-primary-container); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+.avatar-small { width: 24px; height: 24px; font-size: 10px; }
+.avatar-medium { width: 32px; height: 32px; font-size: 12px; }
+.avatar-large { width: 40px; height: 40px; font-size: 14px; }
+.avatar-xlarge { width: 48px; height: 48px; font-size: 16px; }
+
+/* Chip */
+.chip { display: inline-flex; align-items: center; gap: var(--space-8); padding: 0 12px; height: 32px; border-radius: var(--radius-16); background: var(--surface-variant); color: var(--on-surface-variant); font-size: 13px; font-weight: 500; border: 1px solid var(--outline-variant); }
+.chip.selected { background: var(--secondary-container); color: var(--on-secondary-container); border-color: var(--secondary-container); }
+.chip.disabled { opacity: 0.38; }
+
+/* Tooltip */
+.tooltip-target { position: relative; display: inline-block; }
+.tooltip {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--on-surface-variant); color: var(--surface); padding: 6px 10px;
+  border-radius: var(--radius-4); font-size: 12px; white-space: nowrap; z-index: 100;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.tooltip-target:hover .tooltip { opacity: 1; }
+.tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--on-surface-variant); }
+
+/* List */
+.list-item { display: flex; align-items: center; gap: var(--space-16); padding: var(--space-16); height: 56px; border-bottom: 1px solid var(--outline-variant); }
+.list-item:last-child { border-bottom: none; }
+.list-item-title { font-size: 14px; font-weight: 500; color: var(--text-1); }
+.list-item-subtitle { font-size: 12px; color: var(--text-3); }
+
+/* ============ PATTERNS ============ */
+.pattern-page { border: 1px solid var(--outline-variant); border-radius: var(--radius-12); overflow: hidden; box-shadow: var(--shadow-1); background: var(--surface); }
+
+.pattern-header { padding: var(--space-16) var(--space-24); border-bottom: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+
+.pattern-sidebar { width: 220px; background: var(--surface-variant); border-right: 1px solid var(--outline-variant); padding: var(--space-16); min-height: 400px; }
+
+.pattern-content { padding: var(--space-24); flex: 1; }
+
+.pattern-nav-item { padding: var(--space-12) var(--space-16); border-radius: var(--radius-8); font-size: 14px; color: var(--text-2); cursor: pointer; margin-bottom: 4px; }
+.pattern-nav-item:hover { background: var(--surface-container); color: var(--text-1); }
+.pattern-nav-item.active { background: var(--primary-container); color: var(--on-primary-container); font-weight: 600; }
+
+/* Dashboard */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-16); margin-bottom: var(--space-24); }
+
+.stat-card { border-radius: var(--radius-12); padding: var(--space-24); background: var(--surface); border: 1px solid var(--outline-variant); box-shadow: var(--shadow-1); }
+.stat-label { font-size: 12px; color: var(--text-3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text-1); margin-bottom: 8px; }
+.stat-change { font-size: 13px; color: var(--text-3); font-weight: 600; }
+.stat-change.negative { color: var(--error); }
+
+.chart-placeholder { height: 200px; border-radius: var(--radius-12); background: var(--surface-variant); border: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 14px; margin-bottom: var(--space-24); }
+
+/* ============ OPEN ISSUES ============ */
+.issue-list { display: flex; flex-direction: column; gap: var(--space-12); }
+.issue-item { display: flex; align-items: flex-start; gap: var(--space-12); padding: var(--space-16); border-radius: var(--radius-12); background: var(--surface-variant); border-left: 4px solid var(--warning); }
+.issue-item.p0 { border-left-color: var(--error); }
+.issue-item.p1 { border-left-color: var(--warning); }
+.issue-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--error); color: var(--on-error); white-space: nowrap; }
+.issue-badge.p1 { background: var(--warning); color: var(--on-warning); }
+.issue-text { font-size: 14px; color: var(--text-1); }
+.issue-detail { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+/* ============ UTILS ============ */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.gap-8 { gap: var(--space-8); }
+.gap-16 { gap: var(--space-16); }
+.gap-24 { gap: var(--space-24); }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1; }
+
+.mt-16 { margin-top: var(--space-16); }
+.mt-24 { margin-top: var(--space-24); }
+.mt-32 { margin-top: var(--space-32); }
+.mb-16 { margin-bottom: var(--space-16); }
+.mb-24 { margin-bottom: var(--space-24); }
+
+.text-sm { font-size: 13px; }
+.text-xs { font-size: 11px; }
+.font-mono { font-family: monospace; }
+
+.w-full { width: 100%; }
+.max-w-560 { max-width: 560px; }
+
+.todo-label { font-size: 11px; color: var(--text-3); font-style: italic; margin-top: 4px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--outline); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav-bar { padding: 0 var(--space-16); height: auto; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .nav-links { order: 3; width: 100%; margin-top: 8px; }
+  main { padding-top: 100px; }
+  .component-grid { grid-template-columns: 1fr; }
+  .type-row { grid-template-columns: 1fr; }
+  .pattern-sidebar { display: none; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="theme-blue">
+
+<!-- Navigation -->
+<nav class="nav-bar">
+  <div class="nav-logo">
+    <span style="font-size:24px;">🎨</span>
+    <span>Design System</span>
+  </div>
+  <div class="nav-links">
+    <a href="#overview" class="nav-link active">Overview</a>
+    <a href="#color" class="nav-link">Color</a>
+    <a href="#typography" class="nav-link">Typography</a>
+    <a href="#foundations" class="nav-link">Foundations</a>
+    <a href="#components" class="nav-link">Components</a>
+    <a href="#patterns" class="nav-link">Patterns</a>
+    <a href="#pages" class="nav-link">Real Pages</a>
+    <a href="#issues" class="nav-link">Open Issues</a>
+  </div>
+  <div class="theme-switcher">
+    <button class="theme-btn active" data-theme="blue">蓝</button>
+    <button class="theme-btn" data-theme="purple">紫</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- Overview -->
+<section id="overview" class="section">
+  <h1 class="section-title">Design System 可视化规范稿</h1>
+  <p class="section-desc">基于《Figma Design System — Critical 信息补齐版 v4.0》生成的可视化预览，用于评审两套主题（蓝/紫）的视觉效果，验证组件状态和真实页面表现。</p>
+  
+  <div class="approximate-badge" id="approximate-badge">
+    ⚠️ 当前为 APPROXIMATE 预览 — 颜色仅用于可视化验证，不可用于生产 token
+  </div>
+  
+  <div class="color-overview-grid">
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--primary);"><span style="color:var(--on-primary);font-weight:700;">Primary</span></div>
+      <div class="swatch-info"><div class="swatch-name">Primary</div><div class="swatch-hex" id="primary-hex">#0B57D0</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--secondary);"><span style="color:var(--on-secondary);font-weight:700;">Secondary</span></div>
+      <div class="swatch-info"><div class="swatch-name">Secondary</div><div class="swatch-hex" id="secondary-hex">#00639B</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--tertiary);"><span style="color:var(--on-tertiary);font-weight:700;">Tertiary</span></div>
+      <div class="swatch-info"><div class="swatch-name">Tertiary</div><div class="swatch-hex" id="tertiary-hex">#146C2E</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--error);"><span style="color:var(--on-error);font-weight:700;">Error</span></div>
+      <div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-hex" id="error-hex">#B3261E</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--surface); border:1px solid var(--outline-variant);"><span style="color:var(--on-surface);font-weight:700;">Surface</span></div>
+      <div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex" id="surface-hex">#FFFFFF</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--surface-variant);"><span style="color:var(--on-surface-variant);font-weight:700;">Surface Variant</span></div>
+      <div class="swatch-info"><div class="swatch-name">Surface Variant</div><div class="swatch-hex" id="surface-variant-hex">#E1E3E1</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--outline);"><span style="color:var(--on-primary);font-weight:700;">Outline</span></div>
+      <div class="swatch-info"><div class="swatch-name">Outline</div><div class="swatch-hex" id="outline-hex">#C4C7C5</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--text-1);"><span style="color:#fff;font-weight:700;">Text 1</span></div>
+      <div class="swatch-info"><div class="swatch-name">Text 1</div><div class="swatch-hex" id="text1-hex">#1F1F1F</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--text-2);"><span style="color:#fff;font-weight:700;">Text 2</span></div>
+      <div class="swatch-info"><div class="swatch-name">Text 2</div><div class="swatch-hex" id="text2-hex">#44474E</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background: var(--text-3);"><span style="color:#fff;font-weight:700;">Text 3</span></div>
+      <div class="swatch-info"><div class="swatch-name">Text 3</div><div class="swatch-hex" id="text3-hex">#747775</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Color -->
+<section id="color" class="section">
+  <h2 class="section-title">Color System</h2>
+  <p class="section-desc">两套主题的 Primitive 和 Semantic 颜色 Token。</p>
+  
+  <div class="approximate-badge" id="color-approximate-badge" style="display:none;">
+    ⚠️ APPROXIMATE
+  </div>
+
+  <h3 style="font-size:20px;font-weight:700;color:var(--text-1);margin:32px 0 16px;">Semantic Color Tokens</h3>
+  <div class="semantic-grid" id="semantic-grid">
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--primary);color:var(--on-primary);">primary</div>
+      <div class="semantic-name">primary</div>
+      <div class="semantic-value" id="semantic-primary">#0B57D0</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--primary-container);color:var(--on-primary-container);">primary-container</div>
+      <div class="semantic-name">primary-container</div>
+      <div class="semantic-value" id="semantic-primary-container">#D3E3FD</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--on-primary-container);color:var(--primary-container);">on-primary-container</div>
+      <div class="semantic-name">on-primary-container</div>
+      <div class="semantic-value" id="semantic-on-primary-container">#041E49</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--secondary);color:var(--on-secondary);">secondary</div>
+      <div class="semantic-name">secondary</div>
+      <div class="semantic-value" id="semantic-secondary">#00639B</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--secondary-container);color:var(--on-secondary-container);">secondary-container</div>
+      <div class="semantic-name">secondary-container</div>
+      <div class="semantic-value" id="semantic-secondary-container">#C2E7FF</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--tertiary);color:var(--on-tertiary);">tertiary</div>
+      <div class="semantic-name">tertiary</div>
+      <div class="semantic-value" id="semantic-tertiary">#146C2E</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--tertiary-container);color:var(--on-tertiary-container);">tertiary-container</div>
+      <div class="semantic-name">tertiary-container</div>
+      <div class="semantic-value" id="semantic-tertiary-container">#C4EED0</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--error);color:var(--on-error);">error</div>
+      <div class="semantic-name">error</div>
+      <div class="semantic-value" id="semantic-error">#B3261E</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--error-container);color:var(--on-error-container);">error-container</div>
+      <div class="semantic-name">error-container</div>
+      <div class="semantic-value" id="semantic-error-container">#F9DEDC</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--surface);color:var(--on-surface);border:1px solid var(--outline-variant);">surface</div>
+      <div class="semantic-name">surface</div>
+      <div class="semantic-value" id="semantic-surface">#FFFFFF</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--on-surface);color:var(--surface);">on-surface</div>
+      <div class="semantic-name">on-surface</div>
+      <div class="semantic-value" id="semantic-on-surface">#1F1F1F</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--surface-variant);color:var(--on-surface-variant);">surface-variant</div>
+      <div class="semantic-name">surface-variant</div>
+      <div class="semantic-value" id="semantic-surface-variant">#E1E3E1</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--on-surface-variant);color:var(--surface-variant);">on-surface-variant</div>
+      <div class="semantic-name">on-surface-variant</div>
+      <div class="semantic-value" id="semantic-on-surface-variant">#44474E</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--outline);color:var(--on-primary);">outline</div>
+      <div class="semantic-name">outline</div>
+      <div class="semantic-value" id="semantic-outline">#C4C7C5</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--outline-variant);color:var(--on-primary);">outline-variant</div>
+      <div class="semantic-name">outline-variant</div>
+      <div class="semantic-value" id="semantic-outline-variant">#747775</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--inverse-primary);color:var(--on-primary-container);">inverse-primary</div>
+      <div class="semantic-name">inverse-primary</div>
+      <div class="semantic-value" id="semantic-inverse-primary">#A8C7FA</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:rgba(0,0,0,0.32);color:#fff;">scrim</div>
+      <div class="semantic-name">scrim</div>
+      <div class="semantic-value">rgba(0,0,0,0.32)</div>
+    </div>
+    <div class="semantic-card">
+      <div class="semantic-preview" style="background:var(--shadow);color:#fff;">shadow</div>
+      <div class="semantic-name">shadow</div>
+      <div class="semantic-value">#000000</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:20px;font-weight:700;color:var(--text-1);margin:48px 0 16px;">Surface Layer Preview</h3>
+  <div class="surface-grid">
+    <div class="surface-card" style="background:var(--surface-container-lowest);">
+      <div class="surface-name">surface-container-lowest</div>
+      <div class="surface-value" id="surface-lowest">#FFFFFF</div>
+    </div>
+    <div class="surface-card" style="background:var(--surface-container-low);">
+      <div class="surface-name">surface-container-low</div>
+      <div class="surface-value" id="surface-low">#F0F4F9</div>
+    </div>
+    <div class="surface-card todo">
+      <div class="surface-name">surface-container</div>
+      <div class="surface-value" id="surface-container">#F8FAFD</div>
+      <div class="todo-label">TODO_CONFIRM — 需从 Figma 确认</div>
+    </div>
+    <div class="surface-card todo">
+      <div class="surface-name">surface-container-high</div>
+      <div class="surface-value" id="surface-high">#F0F4F9</div>
+      <div class="todo-label">TODO_CONFIRM — 需从 Figma 确认</div>
+    </div>
+    <div class="surface-card" style="background:var(--surface-container-highest);">
+      <div class="surface-name">surface-container-highest</div>
+      <div class="surface-value" id="surface-highest">#DDE3EA</div>
+    </div>
+  </div>
+</section>
+
+<!-- Typography -->
+<section id="typography" class="section">
+  <h2 class="section-title">Typography</h2>
+  <p class="section-desc">15 个字体层级，全部来自 PDF 明确标注。使用系统字体栈：system-ui, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Noto Sans CJK SC, Segoe UI, Roboto, Arial, sans-serif</p>
+  
+  <div class="type-grid">
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">display/large</div>
+        <div class="type-spec">56 / 64 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:56px;line-height:64px;font-weight:400;">你好，世界</div>
+        <div class="type-en" style="font-size:56px;line-height:64px;font-weight:400;">Hello World</div>
+        <div class="type-mixed" style="font-size:56px;line-height:64px;font-weight:400;">Hello 你好 World</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">display/medium</div>
+        <div class="type-spec">46 / 52 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:46px;line-height:52px;font-weight:400;">你好，世界</div>
+        <div class="type-en" style="font-size:46px;line-height:52px;font-weight:400;">Hello World</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">display/small</div>
+        <div class="type-spec">36 / 48 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:36px;line-height:48px;font-weight:400;">你好，世界</div>
+        <div class="type-en" style="font-size:36px;line-height:48px;font-weight:400;">Hello World</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">headline/large</div>
+        <div class="type-spec">24 / 34 / bold</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:24px;line-height:34px;font-weight:700;">页面标题示例</div>
+        <div class="type-en" style="font-size:24px;line-height:34px;font-weight:700;">Page Title Example</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">headline/medium</div>
+        <div class="type-spec">20 / 30 / bold</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:20px;line-height:30px;font-weight:700;">区块标题</div>
+        <div class="type-en" style="font-size:20px;line-height:30px;font-weight:700;">Section Title</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">headline/small</div>
+        <div class="type-spec">18 / 28 / bold</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:18px;line-height:28px;font-weight:700;">小标题</div>
+        <div class="type-en" style="font-size:18px;line-height:28px;font-weight:700;">Small Headline</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">title/large</div>
+        <div class="type-spec">24 / 34 / medium</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:24px;line-height:34px;font-weight:500;">大标题文本</div>
+        <div class="type-en" style="font-size:24px;line-height:34px;font-weight:500;">Large Title Text</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">title/medium</div>
+        <div class="type-spec">20 / 30 / medium</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:20px;line-height:30px;font-weight:500;">中标题文本</div>
+        <div class="type-en" style="font-size:20px;line-height:30px;font-weight:500;">Medium Title</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">title/small</div>
+        <div class="type-spec">16 / 26 / medium</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:16px;line-height:26px;font-weight:500;">小标题</div>
+        <div class="type-en" style="font-size:16px;line-height:26px;font-weight:500;">Small Title</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">body/large</div>
+        <div class="type-spec">18 / 28 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:18px;line-height:28px;font-weight:400;">这是一段大正文示例，用于展示正文排版效果。</div>
+        <div class="type-en" style="font-size:18px;line-height:28px;font-weight:400;">This is a large body text example for demonstration.</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">body/medium</div>
+        <div class="type-spec">16 / 26 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:16px;line-height:26px;font-weight:400;">这是一段中正文示例，用于展示正文排版效果。</div>
+        <div class="type-en" style="font-size:16px;line-height:26px;font-weight:400;">This is a medium body text example for demonstration.</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">body/small</div>
+        <div class="type-spec">14 / 22 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:14px;line-height:22px;font-weight:400;">这是一段小正文示例。</div>
+        <div class="type-en" style="font-size:14px;line-height:22px;font-weight:400;">Small body text example.</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">label/large</div>
+        <div class="type-spec">12 / 20 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:12px;line-height:20px;font-weight:400;">标签大号</div>
+        <div class="type-en" style="font-size:12px;line-height:20px;font-weight:400;">Label Large</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">label/medium</div>
+        <div class="type-spec">12 / 20 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:12px;line-height:20px;font-weight:400;">标签中号</div>
+        <div class="type-en" style="font-size:12px;line-height:20px;font-weight:400;">Label Medium</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">label/small</div>
+        <div class="type-spec">11 / 13 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:11px;line-height:13px;font-weight:400;">标签小号</div>
+        <div class="type-en" style="font-size:11px;line-height:13px;font-weight:400;">Label Small</div>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-info">
+        <div class="type-token">label/xsmall</div>
+        <div class="type-spec">10 / 12 / regular</div>
+      </div>
+      <div class="type-sample">
+        <div class="type-cn" style="font-size:10px;line-height:12px;font-weight:400;">超小标签</div>
+        <div class="type-en" style="font-size:10px;line-height:12px;font-weight:400;">Label XS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Foundations -->
+<section id="foundations" class="section">
+  <h2 class="section-title">Foundations</h2>
+  <p class="section-desc">Spacing、Radius、Elevation 和 State Layer 的可视化预览。</p>
+  
+  <div class="foundation-grid">
+    <div class="foundation-card">
+      <div class="foundation-title">Spacing Scale</div>
+      <div class="spacing-row"><div class="spacing-label">0</div><div class="spacing-bar" style="width:0px;"></div><div class="spacing-value">0px</div></div>
+      <div class="spacing-row"><div class="spacing-label">4</div><div class="spacing-bar" style="width:4px;"></div><div class="spacing-value">4px</div></div>
+      <div class="spacing-row"><div class="spacing-label">8</div><div class="spacing-bar" style="width:8px;"></div><div class="spacing-value">8px</div></div>
+      <div class="spacing-row"><div class="spacing-label">12</div><div class="spacing-bar" style="width:12px;"></div><div class="spacing-value">12px</div></div>
+      <div class="spacing-row"><div class="spacing-label">16</div><div class="spacing-bar" style="width:16px;"></div><div class="spacing-value">16px</div></div>
+      <div class="spacing-row"><div class="spacing-label">24</div><div class="spacing-bar" style="width:24px;"></div><div class="spacing-value">24px</div></div>
+      <div class="spacing-row"><div class="spacing-label">32</div><div class="spacing-bar" style="width:32px;"></div><div class="spacing-value">32px</div></div>
+      <div class="spacing-row"><div class="spacing-label">40</div><div class="spacing-bar" style="width:40px;"></div><div class="spacing-value">40px</div></div>
+      <div class="spacing-row"><div class="spacing-label">48</div><div class="spacing-bar" style="width:48px;"></div><div class="spacing-value">48px</div></div>
+      <div class="spacing-row"><div class="spacing-label">64</div><div class="spacing-bar" style="width:64px;"></div><div class="spacing-value">64px</div></div>
+    </div>
+    
+    <div class="foundation-card">
+      <div class="foundation-title">Radius Scale</div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:0px;">0</div><div class="radius-label">0px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:4px;">4</div><div class="radius-label">4px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:8px;">8</div><div class="radius-label">8px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:12px;">12</div><div class="radius-label">12px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:16px;">16</div><div class="radius-label">16px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:20px;">20</div><div class="radius-label">20px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:28px;">28</div><div class="radius-label">28px</div></div>
+      <div class="radius-row"><div class="radius-preview" style="border-radius:9999px;">Full</div><div class="radius-label">Full</div></div>
+    </div>
+    
+    <div class="foundation-card">
+      <div class="foundation-title">Elevation Scale</div>
+      <div class="elevation-row">
+        <div class="elevation-card" style="box-shadow:var(--shadow-1);">Level 1</div>
+        <div class="elevation-card" style="box-shadow:var(--shadow-2);">Level 2</div>
+        <div class="elevation-card" style="box-shadow:var(--shadow-3);">Level 3</div>
+        <div class="elevation-card" style="box-shadow:var(--shadow-4);">Level 4</div>
+        <div class="elevation-card" style="box-shadow:var(--shadow-5);">Level 5</div>
+      </div>
+    </div>
+    
+    <div class="foundation-card">
+      <div class="foundation-title">State Layer Opacity</div>
+      <div class="state-row">
+        <div class="state-demo hover"><span class="state-label">Hover 8%</span></div>
+        <div class="state-demo focus"><span class="state-label">Focus 12%</span></div>
+        <div class="state-demo pressed"><span class="state-label">Pressed 12%</span></div>
+        <div class="state-demo dragged"><span class="state-label">Dragged 16%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Components -->
+<section id="components" class="section">
+  <h2 class="section-title">Components</h2>
+  <p class="section-desc">P0 核心组件可视化，包含多种状态和变体。</p>
+  
+  <div class="component-grid">
+    <!-- Buttons -->
+    <div class="component-card">
+      <div class="component-title">Button</div>
+      <div class="component-subtitle">Variants</div>
+      <div class="component-row">
+        <button class="btn btn-text">Text</button>
+        <button class="btn btn-filled">Filled</button>
+        <button class="btn btn-outlined">Outlined</button>
+        <button class="btn btn-tonal">Tonal</button>
+        <button class="btn btn-elevated">Elevated</button>
+      </div>
+      <div class="component-subtitle">Sizes</div>
+      <div class="component-row">
+        <button class="btn btn-filled btn-small">Small 28</button>
+        <button class="btn btn-filled btn-medium">Medium 32</button>
+        <button class="btn btn-filled btn-large">Large 40</button>
+      </div>
+      <div class="component-subtitle">States</div>
+      <div class="component-row">
+        <button class="btn btn-filled">Default</button>
+        <button class="btn btn-filled btn-disabled">Disabled</button>
+      </div>
+      <div class="component-subtitle">Icon Button</div>
+      <div class="component-row">
+        <button class="btn btn-filled btn-icon btn-icon-small">+</button>
+        <button class="btn btn-filled btn-icon">+</button>
+        <button class="btn btn-filled btn-icon btn-icon-large">+</button>
+        <button class="btn fab">+</button>
+      </div>
+    </div>
+    
+    <!-- Text Fields -->
+    <div class="component-card">
+      <div class="component-title">Text Field / Search</div>
+      <div class="component-subtitle">Filled</div>
+      <div class="component-row" style="flex-direction:column;align-items:flex-start;">
+        <div style="position:relative;width:100%;max-width:280px;">
+          <div class="text-field small"><span class="text-field-value">Small 40</span></div>
+        </div>
+        <div style="position:relative;width:100%;max-width:280px;margin-top:8px;">
+          <div class="text-field medium"><span class="text-field-value">Medium 48</span></div>
+        </div>
+        <div style="position:relative;width:100%;max-width:280px;margin-top:8px;">
+          <div class="text-field large"><span class="text-field-value">Large 56</span></div>
+        </div>
+      </div>
+      <div class="component-subtitle">Outlined</div>
+      <div class="component-row" style="flex-direction:column;align-items:flex-start;">
+        <div class="text-field outlined small" style="margin-top:8px;"><span class="text-field-value">Outlined Small</span></div>
+        <div class="text-field outlined medium" style="margin-top:8px;"><span class="text-field-value">Outlined Medium</span></div>
+      </div>
+      <div class="component-subtitle">Error</div>
+      <div class="component-row" style="flex-direction:column;align-items:flex-start;">
+        <div class="text-field error" style="margin-top:8px;"><span class="text-field-value">Error state</span></div>
+        <div class="text-field-error-msg">请输入有效的邮箱地址</div>
+      </div>
+    </div>
+    
+    <!-- Selection Controls -->
+    <div class="component-card">
+      <div class="component-title">Selection Controls</div>
+      <div class="component-subtitle">Checkbox</div>
+      <div class="component-row">
+        <div class="checkbox"></div>
+        <div class="checkbox checked">✓</div>
+        <div class="checkbox indeterminate">−</div>
+        <div class="checkbox checked disabled">✓</div>
+      </div>
+      <div class="component-subtitle">Radio</div>
+      <div class="component-row">
+        <div class="radio"></div>
+        <div class="radio selected"></div>
+        <div class="radio disabled"></div>
+      </div>
+      <div class="component-subtitle">Switch</div>
+      <div class="component-row" style="align-items:center;">
+        <div class="switch small"></div>
+        <div class="switch small on"></div>
+        <div class="switch"></div>
+        <div class="switch on"></div>
+        <div class="switch large"></div>
+        <div class="switch large on"></div>
+        <div class="switch disabled"></div>
+      </div>
+    </div>
+    
+    <!-- Cards -->
+    <div class="component-card">
+      <div class="component-title">Card</div>
+      <div class="component-row" style="flex-wrap:wrap;">
+        <div class="card" style="width:200px;">
+          <div class="card-title">Standard Card</div>
+          <div class="card-body">默认卡片样式，带轻微阴影。</div>
+        </div>
+        <div class="card card-outlined" style="width:200px;">
+          <div class="card-title">Outlined Card</div>
+          <div class="card-body">边框卡片，无阴影。</div>
+        </div>
+        <div class="card card-elevated" style="width:200px;">
+          <div class="card-title">Elevated Card</div>
+          <div class="card-body">悬浮卡片，阴影更明显。</div>
+        </div>
+        <div class="card card-filled" style="width:200px;">
+          <div class="card-title">Filled Card</div>
+          <div class="card-body">填充卡片，使用 surface-variant。</div>
+        </div>
+      </div>
+      <div class="component-row" style="margin-top:16px;">
+        <div class="card" style="width:240px;padding:0;overflow:hidden;">
+          <div class="card-image">Image Placeholder</div>
+          <div style="padding:16px;">
+            <div class="card-title">Image Card</div>
+            <div class="card-body">带图片的卡片示例</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Table -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Table</div>
+      <div class="component-subtitle">Header Height 58 / Body Row Height 54 / Cell Padding X 16</div>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:48px;"><div class="checkbox checked" style="font-size:10px;">✓</div></th>
+              <th>姓名 ▼</th>
+              <th>邮箱</th>
+              <th>角色</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected">
+              <td><div class="checkbox checked" style="font-size:10px;">✓</div></td>
+              <td>张三</td>
+              <td>zhangsan@example.com</td>
+              <td>管理员</td>
+              <td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td>
+              <td><button class="btn btn-text" style="height:32px;">编辑</button></td>
+            </tr>
+            <tr>
+              <td><div class="checkbox"></div></td>
+              <td>李四</td>
+              <td>lisi@example.com</td>
+              <td>编辑</td>
+              <td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td>
+              <td><button class="btn btn-text" style="height:32px;">编辑</button></td>
+            </tr>
+            <tr>
+              <td><div class="checkbox"></div></td>
+              <td>王五</td>
+              <td>wangwu@example.com</td>
+              <td>访客</td>
+              <td><span class="badge badge-small" style="background:var(--error);color:var(--on-error);">Inactive</span></td>
+              <td><button class="btn btn-text" style="height:32px;">编辑</button></td>
+            </tr>
+            <tr>
+              <td><div class="checkbox"></div></td>
+              <td>赵六</td>
+              <td>zhaoliu@example.com</td>
+              <td>编辑</td>
+              <td><span class="badge badge-small" style="background:var(--warning);color:var(--on-warning);">Pending [TEMP]</span></td>
+              <td><button class="btn btn-text" style="height:32px;">编辑</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-between items-center mt-16" style="padding:0 16px;">
+        <span style="font-size:13px;color:var(--text-3);">共 4 条记录</span>
+        <div class="flex gap-8">
+          <button class="btn btn-outlined btn-small">上一页</button>
+          <button class="btn btn-filled btn-small">1</button>
+          <button class="btn btn-outlined btn-small">2</button>
+          <button class="btn btn-outlined btn-small">3</button>
+          <button class="btn btn-outlined btn-small">下一页</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="component-card">
+      <div class="component-title">Tabs</div>
+      <div class="component-subtitle">Primary Tabs 48</div>
+      <div class="tab-bar">
+        <div class="tab active">全部</div>
+        <div class="tab">进行中</div>
+        <div class="tab">已完成</div>
+        <div class="tab">已归档</div>
+      </div>
+      <div class="component-subtitle" style="margin-top:24px;">Secondary Tabs 40</div>
+      <div class="tab-bar">
+        <div class="tab secondary active">概述</div>
+        <div class="tab secondary">详情</div>
+        <div class="tab secondary">设置</div>
+      </div>
+      <div class="component-subtitle" style="margin-top:24px;">With Icon</div>
+      <div class="tab-bar">
+        <div class="tab active">📊 数据</div>
+        <div class="tab">⚙️ 设置</div>
+        <div class="tab">👤 用户</div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="component-card">
+      <div class="component-title">Modal / Dialog</div>
+      <div class="component-subtitle">Simple Dialog (Max 360)</div>
+      <div style="border:1px solid var(--outline-variant);border-radius:var(--radius-28);padding:24px;max-width:360px;background:var(--surface);box-shadow:var(--shadow-4);">
+        <div style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:8px;">确认删除？</div>
+        <div style="font-size:14px;color:var(--text-2);margin-bottom:24px;line-height:1.6;">此操作不可撤销，确定要删除该记录吗？</div>
+        <div class="flex gap-8" style="justify-content:flex-end;">
+          <button class="btn btn-text">取消</button>
+          <button class="btn btn-filled" style="background:var(--error);color:var(--on-error);">删除</button>
+        </div>
+      </div>
+      <div class="component-subtitle" style="margin-top:24px;">Form Dialog (Max 480)</div>
+      <div style="border:1px solid var(--outline-variant);border-radius:var(--radius-28);padding:24px;max-width:480px;background:var(--surface);box-shadow:var(--shadow-4);">
+        <div style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:16px;">新建用户</div>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;">
+          <div class="text-field outlined"><span class="text-field-value">请输入姓名</span></div>
+          <div class="text-field outlined"><span class="text-field-value">请输入邮箱</span></div>
+        </div>
+        <div class="flex gap-8" style="justify-content:flex-end;">
+          <button class="btn btn-text">取消</button>
+          <button class="btn btn-filled">创建</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Alert -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Alert</div>
+      <div class="approximate-badge" style="margin-bottom:16px;">
+        ⚠️ TODO_CONFIRM — Success / Warning / Info 状态色需设计师确认
+      </div>
+      <div class="component-row" style="flex-wrap:wrap;">
+        <div class="alert alert-info" style="flex:1;min-width:240px;">
+          <div class="alert-icon">i</div>
+          <div class="alert-content">
+            <div class="alert-title">信息提示 <span style="font-size:11px;color:var(--text-3);font-weight:400;">[TEMP ONLY / TODO_CONFIRM]</span></div>
+            <div class="alert-text">这是一条信息提示，用于告知用户当前状态。</div>
+          </div>
+        </div>
+        <div class="alert alert-success" style="flex:1;min-width:240px;">
+          <div class="alert-icon">✓</div>
+          <div class="alert-content">
+            <div class="alert-title">操作成功 <span style="font-size:11px;color:var(--text-3);font-weight:400;">[TEMP ONLY / TODO_CONFIRM]</span></div>
+            <div class="alert-text">数据已成功保存到服务器。</div>
+          </div>
+        </div>
+        <div class="alert alert-warning" style="flex:1;min-width:240px;">
+          <div class="alert-icon">!</div>
+          <div class="alert-content">
+            <div class="alert-title">警告 <span style="font-size:11px;color:var(--text-3);font-weight:400;">[TEMP ONLY / TODO_CONFIRM]</span></div>
+            <div class="alert-text">此操作可能会影响已有数据，请谨慎。</div>
+          </div>
+        </div>
+        <div class="alert alert-error" style="flex:1;min-width:240px;">
+          <div class="alert-icon">×</div>
+          <div class="alert-content">
+            <div class="alert-title">错误</div>
+            <div class="alert-text">网络连接失败，请稍后重试。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Badge / Avatar / Chip / Tooltip / List -->
+    <div class="component-card">
+      <div class="component-title">Badge & Avatar</div>
+      <div class="component-subtitle">Badge</div>
+      <div class="component-row">
+        <div class="badge badge-dot"></div>
+        <div class="badge badge-small">3</div>
+        <div class="badge badge-large">99+</div>
+        <div class="badge badge-small badge-secondary">New</div>
+      </div>
+      <div class="component-subtitle">Avatar</div>
+      <div class="component-row">
+        <div class="avatar avatar-small">A</div>
+        <div class="avatar avatar-medium">B</div>
+        <div class="avatar avatar-large">C</div>
+        <div class="avatar avatar-xlarge">D</div>
+      </div>
+      <div class="component-subtitle">Chip</div>
+      <div class="component-row">
+        <div class="chip">默认</div>
+        <div class="chip selected">已选中</div>
+        <div class="chip disabled">禁用</div>
+      </div>
+      <div class="component-subtitle">Tooltip</div>
+      <div class="component-row">
+        <div class="tooltip-target">
+          <button class="btn btn-text">Hover me</button>
+          <div class="tooltip">这是一个提示文字</div>
+        </div>
+      </div>
+      <div class="component-subtitle">List</div>
+      <div style="border:1px solid var(--outline-variant);border-radius:var(--radius-12);overflow:hidden;">
+        <div class="list-item">
+          <div class="avatar avatar-medium">A</div>
+          <div>
+            <div class="list-item-title">列表项标题</div>
+            <div class="list-item-subtitle">副标题描述</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="avatar avatar-medium">B</div>
+          <div>
+            <div class="list-item-title">列表项标题</div>
+            <div class="list-item-subtitle">副标题描述</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Patterns -->
+<section id="patterns" class="section">
+  <h2 class="section-title">Patterns</h2>
+  <p class="section-desc">常见页面布局模式的可视化。</p>
+  
+  <div class="component-grid">
+    <!-- Page Layout -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Page Layout Pattern</div>
+      <div class="pattern-page">
+        <div class="pattern-header">
+          <div style="font-size:16px;font-weight:700;">📊 数据管理平台</div>
+          <div class="avatar avatar-medium">U</div>
+        </div>
+        <div class="flex" style="min-height:300px;">
+          <div class="pattern-sidebar">
+            <div class="pattern-nav-item active">📊 概览</div>
+            <div class="pattern-nav-item">📋 数据表</div>
+            <div class="pattern-nav-item">👥 用户</div>
+            <div class="pattern-nav-item">⚙️ 设置</div>
+          </div>
+          <div class="pattern-content">
+            <div style="font-size:24px;font-weight:700;color:var(--text-1);margin-bottom:24px;">数据概览</div>
+            <div class="dashboard-grid" style="grid-template-columns: repeat(3, 1fr);">
+              <div class="stat-card">
+                <div class="stat-label">总用户数</div>
+                <div class="stat-value">12,345</div>
+                <div class="stat-change">+12.5% ↑</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">活跃用户</div>
+                <div class="stat-value">8,234</div>
+                <div class="stat-change">+5.3% ↑</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">转化率</div>
+                <div class="stat-value">24.8%</div>
+                <div class="stat-change negative">-2.1% ↓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Form Pattern -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Form Pattern</div>
+      <div class="pattern-page" style="max-width:600px;">
+        <div style="padding:24px;">
+          <div style="font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:24px;">新建项目</div>
+          <div style="display:flex;flex-direction:column;gap:24px;">
+            <div>
+              <div class="text-field outlined" style="max-width:100%;"><span class="text-field-value">项目名称</span></div>
+            </div>
+            <div>
+              <div class="text-field outlined" style="max-width:100%;"><span class="text-field-value">项目描述</span></div>
+            </div>
+            <div class="flex gap-16" style="align-items:center;">
+              <span style="font-size:14px;color:var(--text-2);">是否公开</span>
+              <div class="switch on"></div>
+            </div>
+            <div class="flex gap-16" style="align-items:center;">
+              <div class="radio selected"></div>
+              <span style="font-size:14px;color:var(--text-2);">标准模式</span>
+              <div class="radio"></div>
+              <span style="font-size:14px;color:var(--text-2);">高级模式</span>
+            </div>
+            <div class="alert alert-error" style="margin:0;">
+              <div class="alert-icon">×</div>
+              <div class="alert-content">
+                <div class="alert-title">表单错误</div>
+                <div class="alert-text">请填写所有必填字段。</div>
+              </div>
+            </div>
+            <div class="flex gap-8" style="justify-content:flex-end;">
+              <button class="btn btn-text">取消</button>
+              <button class="btn btn-filled">保存</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Table Pattern -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Table Pattern</div>
+      <div class="pattern-page">
+        <div style="padding:16px 24px;border-bottom:1px solid var(--outline-variant);">
+          <div class="flex justify-between items-center">
+            <div style="font-size:20px;font-weight:700;">用户列表</div>
+            <div class="flex gap-8">
+              <div class="text-field outlined small" style="max-width:200px;"><span class="text-field-value">🔍 搜索用户</span></div>
+              <button class="btn btn-outlined btn-small">筛选</button>
+              <button class="btn btn-filled btn-small">+ 新建</button>
+            </div>
+          </div>
+        </div>
+        <div class="table-wrapper" style="border-radius:0;border:none;">
+          <table class="table">
+            <thead><tr><th><div class="checkbox"></div></th><th>姓名</th><th>邮箱</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td><div class="checkbox"></div></td><td>张三</td><td>zhangsan@example.com</td><td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td></tr>
+              <tr><td><div class="checkbox"></div></td><td>李四</td><td>lisi@example.com</td><td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td></tr>
+              <tr><td><div class="checkbox"></div></td><td>王五</td><td>wangwu@example.com</td><td><span class="badge badge-small" style="background:var(--error);color:var(--on-error);">Inactive</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-between items-center" style="padding:16px 24px;">
+          <div class="flex gap-8">
+            <button class="btn btn-outlined btn-small">批量操作</button>
+          </div>
+          <div class="flex gap-8">
+            <button class="btn btn-outlined btn-small">上一页</button>
+            <button class="btn btn-filled btn-small">1</button>
+            <button class="btn btn-outlined btn-small">下一页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal Flow -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Modal Flow Pattern</div>
+      <div class="flex gap-24" style="flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text-3);margin-bottom:12px;">STEP 1: 触发</div>
+          <button class="btn btn-filled">打开弹窗</button>
+        </div>
+        <div style="font-size:24px;color:var(--text-3);display:flex;align-items:center;">→</div>
+        <div style="flex:1;min-width:280px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text-3);margin-bottom:12px;">STEP 2: 弹窗</div>
+          <div style="border:1px solid var(--outline-variant);border-radius:var(--radius-28);padding:24px;background:var(--surface);box-shadow:var(--shadow-4);max-width:400px;">
+            <div style="font-size:20px;font-weight:700;margin-bottom:16px;">确认操作</div>
+            <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:24px;">
+              <div class="text-field outlined"><span class="text-field-value">输入确认码</span></div>
+            </div>
+            <div class="flex gap-8" style="justify-content:flex-end;">
+              <button class="btn btn-text">取消</button>
+              <button class="btn btn-filled">确认</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Real Pages -->
+<section id="pages" class="section">
+  <h2 class="section-title">Real Pages</h2>
+  <p class="section-desc">3 个真实业务页面预览，用于判断整体视觉效果。</p>
+  
+  <div class="component-grid">
+    <!-- Dashboard Page -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Dashboard Page</div>
+      <div class="pattern-page">
+        <div class="pattern-header">
+          <div class="flex gap-16 items-center">
+            <div style="font-size:20px;font-weight:700;">📊 Dashboard</div>
+            <div class="tab-bar" style="border-bottom:none;">
+              <div class="tab secondary active">概览</div>
+              <div class="tab secondary">分析</div>
+              <div class="tab secondary">报告</div>
+            </div>
+          </div>
+          <div class="flex gap-8 items-center">
+            <div class="text-field outlined small" style="max-width:200px;"><span class="text-field-value">🔍 搜索</span></div>
+            <div class="badge badge-dot" style="position:relative;top:-8px;"></div>
+            <div class="avatar avatar-medium">U</div>
+          </div>
+        </div>
+        <div class="pattern-content">
+          <div class="dashboard-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-value">¥128,450</div>
+              <div class="stat-change">+15.3% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Active Users</div>
+              <div class="stat-value">8,234</div>
+              <div class="stat-change">+5.3% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Conversion Rate</div>
+              <div class="stat-value">24.8%</div>
+              <div class="stat-change negative">-2.1% vs last month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Avg Order Value</div>
+              <div class="stat-value">¥342</div>
+              <div class="stat-change">+8.7% vs last month</div>
+            </div>
+          </div>
+          <div class="chart-placeholder">Chart Area — Revenue Trend</div>
+          <div style="display:flex;gap:16px;">
+            <div class="card" style="flex:1;">
+              <div class="card-title">Recent Activities</div>
+              <div class="list-item" style="padding:12px 0;">
+                <div class="avatar avatar-small">A</div>
+                <div><div class="list-item-title">Alice created a new project</div><div class="list-item-subtitle">2 min ago</div></div>
+              </div>
+              <div class="list-item" style="padding:12px 0;">
+                <div class="avatar avatar-small">B</div>
+                <div><div class="list-item-title">Bob updated settings</div><div class="list-item-subtitle">15 min ago</div></div>
+              </div>
+            </div>
+            <div class="card" style="flex:1;">
+              <div class="card-title">Quick Actions</div>
+              <div class="flex gap-8 mt-16">
+                <button class="btn btn-filled">新建项目</button>
+                <button class="btn btn-outlined">导出报表</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Data Table Page -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Data Table Page</div>
+      <div class="pattern-page">
+        <div class="pattern-header">
+          <div style="font-size:20px;font-weight:700;">📋 用户管理</div>
+          <div class="flex gap-8">
+            <div class="text-field outlined small" style="max-width:240px;"><span class="text-field-value">🔍 搜索用户</span></div>
+            <button class="btn btn-outlined btn-small">筛选</button>
+            <button class="btn btn-filled btn-small">+ 新建</button>
+          </div>
+        </div>
+        <div class="table-wrapper" style="border-radius:0;border:none;border-top:1px solid var(--outline-variant);">
+          <table class="table">
+            <thead>
+              <tr><th style="width:48px;"><div class="checkbox"></div></th><th>ID</th><th>姓名</th><th>邮箱</th><th>角色</th><th>状态</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><div class="checkbox"></div></td><td>#001</td><td>张三</td><td>zhangsan@example.com</td><td>管理员</td><td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td><td><button class="btn btn-text" style="height:28px;font-size:12px;">编辑</button></td></tr>
+              <tr><td><div class="checkbox"></div></td><td>#002</td><td>李四</td><td>lisi@example.com</td><td>编辑</td><td><span class="badge badge-small" style="background:var(--success);color:var(--on-success);">Active [TEMP]</span></td><td><button class="btn btn-text" style="height:28px;font-size:12px;">编辑</button></td></tr>
+              <tr><td><div class="checkbox"></div></td><td>#003</td><td>王五</td><td>wangwu@example.com</td><td>访客</td><td><span class="badge badge-small" style="background:var(--error);color:var(--on-error);">Inactive</span></td><td><button class="btn btn-text" style="height:28px;font-size:12px;">编辑</button></td></tr>
+              <tr><td><div class="checkbox"></div></td><td>#004</td><td>赵六</td><td>zhaoliu@example.com</td><td>编辑</td><td><span class="badge badge-small" style="background:var(--warning);color:var(--on-warning);">Pending [TEMP]</span></td><td><button class="btn btn-text" style="height:28px;font-size:12px;">编辑</button></td></tr>
+              <tr style="opacity:0.5;"><td><div class="checkbox"></div></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge badge-small" style="background:var(--outline);color:var(--on-surface);">Empty</span></td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-between items-center" style="padding:16px 24px;">
+          <span style="font-size:13px;color:var(--text-3);">共 4 条记录，每页 10 条</span>
+          <div class="flex gap-8">
+            <button class="btn btn-outlined btn-small">上一页</button>
+            <button class="btn btn-filled btn-small">1</button>
+            <button class="btn btn-outlined btn-small">2</button>
+            <button class="btn btn-outlined btn-small">3</button>
+            <button class="btn btn-outlined btn-small">下一页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Page -->
+    <div class="component-card" style="grid-column:1 / -1;">
+      <div class="component-title">Settings / Form Page</div>
+      <div class="pattern-page" style="max-width:700px;">
+        <div style="padding:24px;border-bottom:1px solid var(--outline-variant);">
+          <div style="font-size:24px;font-weight:700;">⚙️ 系统设置</div>
+        </div>
+        <div style="padding:24px;">
+          <div style="margin-bottom:32px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:16px;">基本信息</div>
+            <div style="display:flex;flex-direction:column;gap:24px;">
+              <div class="flex gap-16" style="align-items:center;">
+                <div style="width:100px;font-size:14px;color:var(--text-2);">站点名称</div>
+                <div class="text-field outlined" style="flex:1;max-width:none;"><span class="text-field-value">数据管理平台</span></div>
+              </div>
+              <div class="flex gap-16" style="align-items:center;">
+                <div style="width:100px;font-size:14px;color:var(--text-2);">描述</div>
+                <div class="text-field outlined" style="flex:1;max-width:none;"><span class="text-field-value">这是一个企业级数据管理平台</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-bottom:32px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:16px;">功能开关</div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div class="flex gap-16 justify-between" style="align-items:center;padding:12px 16px;border-radius:var(--radius-8);border:1px solid var(--outline-variant);">
+                <div><div style="font-size:14px;font-weight:500;">启用通知</div><div style="font-size:12px;color:var(--text-3);">接收邮件和站内通知</div></div>
+                <div class="switch on"></div>
+              </div>
+              <div class="flex gap-16 justify-between" style="align-items:center;padding:12px 16px;border-radius:var(--radius-8);border:1px solid var(--outline-variant);">
+                <div><div style="font-size:14px;font-weight:500;">自动保存</div><div style="font-size:12px;color:var(--text-3);">每 30 秒自动保存</div></div>
+                <div class="switch"></div>
+              </div>
+              <div class="flex gap-16 justify-between" style="align-items:center;padding:12px 16px;border-radius:var(--radius-8);border:1px solid var(--outline-variant);">
+                <div><div style="font-size:14px;font-weight:500;">深色模式</div><div style="font-size:12px;color:var(--text-3);">切换系统主题</div></div>
+                <div class="switch disabled"></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-bottom:32px;">
+            <div style="font-size:18px;font-weight:700;color:var(--text-1);margin-bottom:16px;">偏好设置</div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div class="flex gap-16" style="align-items:center;">
+                <div class="radio selected"></div>
+                <span style="font-size:14px;">紧凑布局</span>
+                <div class="radio"></div>
+                <span style="font-size:14px;">舒适布局</span>
+              </div>
+              <div class="flex gap-16" style="align-items:center;">
+                <div class="checkbox checked" style="font-size:10px;">✓</div>
+                <span style="font-size:14px;">显示行号</span>
+                <div class="checkbox"></div>
+                <span style="font-size:14px;">显示缩略图</span>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-error" style="margin-bottom:24px;">
+            <div class="alert-icon">×</div>
+            <div class="alert-content"><div class="alert-title">保存失败</div><div class="alert-text">网络连接超时，请检查网络后重试。</div></div>
+          </div>
+          <div class="flex gap-8" style="justify-content:flex-end;">
+            <button class="btn btn-text">重置</button>
+            <button class="btn btn-filled">保存更改</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Open Issues -->
+<section id="issues" class="section">
+  <h2 class="section-title">Open Issues</h2>
+  <p class="section-desc">当前仍未确认的问题清单，需在 Figma MVP 搭建前解决。</p>
+  
+  <div class="issue-list">
+    <div class="issue-item p0">
+      <div class="issue-badge">P0</div>
+      <div>
+        <div class="issue-text">蓝色 / 紫色完整 0–100 Primitive Tonal Palette 仍未完全补齐</div>
+        <div class="issue-detail">关键 Tone（10/30/40/80/90）已确认，其余 Tone 为 M3_GENERATED 或 PDF 拾取</div>
+      </div>
+    </div>
+    <div class="issue-item p0">
+      <div class="issue-badge">P0</div>
+      <div>
+        <div class="issue-text">Success / Warning / Info 色值仍是 TODO_CONFIRM</div>
+        <div class="issue-detail">已建立轻量 Token，但色值未从 Alert 组件或独立色板确认</div>
+      </div>
+    </div>
+    <div class="issue-item p1">
+      <div class="issue-badge p1">P1</div>
+      <div>
+        <div class="issue-text">surface-container / surface-container-high 色值仍需确认</div>
+        <div class="issue-detail">用户已确认保留此系列 Token，但具体色值需从 Figma 源文件导出</div>
+      </div>
+    </div>
+    <div class="issue-item p1">
+      <div class="issue-badge p1">P1</div>
+      <div>
+        <div class="issue-text">Text Field 本体尺寸是否复用 Search 尺寸体系需确认</div>
+        <div class="issue-detail">当前使用搜索框尺寸推断（40/48/56），Text Field 本体未在 PDF 中直接标注</div>
+      </div>
+    </div>
+    <div class="issue-item p1">
+      <div class="issue-badge p1">P1</div>
+      <div>
+        <div class="issue-text">Card 精确尺寸需从源设计稿确认</div>
+        <div class="issue-detail">当前采用 M3 标准作为临时建议（Radius 12, Padding 16），源设计稿无明确标注</div>
+      </div>
+    </div>
+    <div class="issue-item p1">
+      <div class="issue-badge p1">P1</div>
+      <div>
+        <div class="issue-text">Dark Mode 当前不做，作为 v1.5 / v2.0 规划</div>
+        <div class="issue-detail">v1.0 阶段仅做 Light Theme（蓝/紫 2 套），Dark Mode 无设计稿</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Theme data for updating hex values in the UI
+const themeData = {
+  'blue': {
+    primary: '#0B57D0', secondary: '#00639B', tertiary: '#146C2E', error: '#B3261E',
+    surface: '#FFFFFF', surfaceVariant: '#E1E3E1', outline: '#C4C7C5',
+    text1: '#1F1F1F', text2: '#44474E', text3: '#747775',
+    semantic: {
+      primary: '#0B57D0', 'primary-container': '#D3E3FD', 'on-primary-container': '#041E49',
+      secondary: '#00639B', 'secondary-container': '#C2E7FF', 'on-secondary-container': '#001D35',
+      tertiary: '#146C2E', 'tertiary-container': '#C4EED0', 'on-tertiary-container': '#072711',
+      error: '#B3261E', 'error-container': '#F9DEDC', 'on-error-container': '#410E0B',
+      surface: '#FFFFFF', 'on-surface': '#1F1F1F', 'surface-variant': '#E1E3E1',
+      'on-surface-variant': '#44474E', outline: '#C4C7C5', 'outline-variant': '#747775',
+      'inverse-primary': '#A8C7FA'
+    },
+    surfaceLayers: { lowest: '#FFFFFF', low: '#F0F4F9', container: '#F8FAFD', high: '#F0F4F9', highest: '#DDE3EA' },
+    approximate: false, badge: 'USER_PROVIDED_TOKEN_FILE'
+  },
+  'purple': {
+    primary: '#6750A4', secondary: '#625B71', tertiary: '#7D5260', error: '#B3261E',
+    surface: '#FEF7FF', surfaceVariant: '#E8E0E8', outline: '#CAC4D0',
+    text1: '#1D1B20', text2: '#49454F', text3: '#79747E',
+    semantic: {
+      primary: '#6750A4', 'primary-container': '#EADDFF', 'on-primary-container': '#21005D',
+      secondary: '#625B71', 'secondary-container': '#E8DEF8', 'on-secondary-container': '#1D192B',
+      tertiary: '#7D5260', 'tertiary-container': '#FFD8E4', 'on-tertiary-container': '#31111D',
+      error: '#B3261E', 'error-container': '#F9DEDC', 'on-error-container': '#410E0B',
+      surface: '#FEF7FF', 'on-surface': '#1D1B20', 'surface-variant': '#E8E0E8',
+      'on-surface-variant': '#49454F', outline: '#CAC4D0', 'outline-variant': '#79747E',
+      'inverse-primary': '#D0BCFF'
+    },
+    surfaceLayers: { lowest: '#FFFFFF', low: '#F3EDF7', container: '#F7F2FA', high: '#ECE6F0', highest: '#E6E0E9' },
+    approximate: false, badge: 'USER_PROVIDED_TOKEN_FILE'
+  }
+};
+
+const body = document.body;
+const themeBtns = document.querySelectorAll('.theme-btn');
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Theme switching
+themeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.theme;
+    body.className = 'theme-' + theme;
+    themeBtns.forEach(b => b.classList.toggle('active', b === btn));
+    updateHexValues(theme);
+    updateApproximateBadge(theme);
+  });
+});
+
+function updateHexValues(theme) {
+  const data = themeData[theme];
+  if (!data) return;
+  
+  // Update overview swatches
+  document.getElementById('primary-hex').textContent = data.primary;
+  document.getElementById('secondary-hex').textContent = data.secondary;
+  document.getElementById('tertiary-hex').textContent = data.tertiary;
+  document.getElementById('error-hex').textContent = data.error;
+  document.getElementById('surface-hex').textContent = data.surface;
+  document.getElementById('surface-variant-hex').textContent = data.surfaceVariant;
+  document.getElementById('outline-hex').textContent = data.outline;
+  document.getElementById('text1-hex').textContent = data.text1;
+  document.getElementById('text2-hex').textContent = data.text2;
+  document.getElementById('text3-hex').textContent = data.text3;
+  
+  // Update semantic values
+  for (const [key, value] of Object.entries(data.semantic)) {
+    const el = document.getElementById('semantic-' + key);
+    if (el) el.textContent = value;
+  }
+  
+  // Update surface layers
+  document.getElementById('surface-lowest').textContent = data.surfaceLayers.lowest;
+  document.getElementById('surface-low').textContent = data.surfaceLayers.low;
+  document.getElementById('surface-container').textContent = data.surfaceLayers.container;
+  document.getElementById('surface-high').textContent = data.surfaceLayers.high;
+  document.getElementById('surface-highest').textContent = data.surfaceLayers.highest;
+}
+
+function updateApproximateBadge(theme) {
+  const data = themeData[theme];
+  const badge = document.getElementById('approximate-badge');
+  const colorBadge = document.getElementById('color-approximate-badge');
+  
+  if (data.approximate) {
+    badge.style.display = 'inline-flex';
+    badge.textContent = '⚠️ 当前为 APPROXIMATE 预览 — 颜色来自 PDF_PICKED_APPROXIMATE，需从 Figma 源文件确认最终色值';
+    colorBadge.style.display = 'inline-flex';
+    colorBadge.textContent = '⚠️ APPROXIMATE — 颜色来自 PDF_PICKED_APPROXIMATE，需从 Figma 源文件确认最终色值';
+  } else {
+    badge.style.display = 'inline-flex';
+    badge.textContent = '✅ 核心 Semantic Colors 已确认，可用于视觉预览和 MVP 验证；完整 0–100 色阶和状态色仍需确认';
+    colorBadge.style.display = 'none';
+  }
+}
+
+// Navigation active state
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Intersection Observer for section highlighting
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-100px 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

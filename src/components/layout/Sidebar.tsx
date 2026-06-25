@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { modules } from '@/data/modules'
 import { features } from '@/data/features'
 
@@ -11,7 +11,6 @@ interface SidebarProps {
 
 export default function Sidebar({ collapsed, onToggle, currentFeatureId }: SidebarProps) {
   const [expandedModules, setExpandedModules] = useState<string[]>(['homework'])
-  const location = useLocation()
 
   const toggleModule = (moduleId: string) => {
     setExpandedModules(prev =>
@@ -27,23 +26,30 @@ export default function Sidebar({ collapsed, onToggle, currentFeatureId }: Sideb
 
   return (
     <aside
-      className={`flex flex-col bg-gray-900 text-white transition-all duration-300 ${
+      className={`flex flex-col bg-sidebar-bg text-gray-900 transition-all duration-300 shrink-0 ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
-      <div className="flex items-center h-14 px-4 border-b border-gray-700">
-        {!collapsed && <span className="text-lg font-bold">校校</span>}
-        {collapsed && <span className="text-xl">📚</span>}
+      {/* Logo / Title */}
+      <div className="flex items-center h-14 px-4 border-b border-sidebar-border shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white font-bold text-sm shrink-0">
+          校
+        </div>
+        {!collapsed && (
+          <span className="ml-3 text-base font-bold tracking-wide text-gray-900">校校</span>
+        )}
       </div>
 
+      {/* Collapse button */}
       <button
         onClick={onToggle}
-        className="absolute top-14 right-0 -translate-x-1/2 transform bg-gray-800 hover:bg-gray-700 rounded-full p-1 transition-colors"
+        className="absolute ml-[228px] mt-9 w-6 h-6 bg-white hover:bg-brand rounded-full flex items-center justify-center text-xs text-sidebar-muted hover:text-white transition-all shadow-md z-50 border border-sidebar-border"
       >
-        <span className="text-sm">{collapsed ? '▶' : '◀'}</span>
+        {collapsed ? '▶' : '◀'}
       </button>
 
-      <nav className="flex-1 overflow-y-auto sidebar-scrollbar py-4">
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto scroll-dark py-3">
         {modules.map(module => {
           const moduleFeatures = features.filter(f => f.moduleId === module.id)
           const isExpanded = expandedModules.includes(module.id)
@@ -51,37 +57,42 @@ export default function Sidebar({ collapsed, onToggle, currentFeatureId }: Sideb
 
           return (
             <div key={module.id} className="mb-1">
+              {/* Module header */}
               <button
                 onClick={() => toggleModule(module.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
                   hasActiveFeature
-                    ? 'bg-gray-800 text-blue-400'
-                    : 'hover:bg-gray-800 text-gray-300'
+                    ? 'text-gray-900'
+                    : 'text-sidebar-text hover:text-gray-900 hover:bg-sidebar-hover'
                 }`}
               >
-                <span className="text-lg">{module.icon}</span>
+                <span className="text-base shrink-0">{module.icon}</span>
                 {!collapsed && (
                   <>
-                    <span className="flex-1">{module.name}</span>
-                    <span className="text-gray-500 text-sm">
-                      {isExpanded ? '▼' : '▶'}
+                    <span className="flex-1 text-sm font-medium">{module.name}</span>
+                    <span className={`text-xs transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+                      ▶
                     </span>
                   </>
                 )}
               </button>
 
-              {(isExpanded || collapsed) && !collapsed && (
-                <div className="bg-gray-950">
+              {/* Feature items */}
+              {isExpanded && !collapsed && (
+                <div className="pb-1">
                   {moduleFeatures.map(feature => (
                     <Link
                       key={feature.id}
                       to={feature.route}
-                      className={`block w-full px-4 py-2 pl-12 text-sm transition-colors ${
+                      className={`flex items-center w-full px-4 py-2 pl-11 text-sm transition-all relative ${
                         isFeatureActive(feature.id)
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                          ? 'bg-brand text-white font-medium'
+                          : 'text-sidebar-text hover:text-gray-900 hover:bg-sidebar-hover'
                       }`}
                     >
+                      {isFeatureActive(feature.id) && (
+                        <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-brand-dark" />
+                      )}
                       {feature.name}
                     </Link>
                   ))}
@@ -92,13 +103,14 @@ export default function Sidebar({ collapsed, onToggle, currentFeatureId }: Sideb
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
+      {/* Footer */}
+      <div className="px-4 py-3 border-t border-sidebar-border shrink-0">
         {!collapsed ? (
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-sidebar-muted text-center">
             校校产品团队 · 2026
           </p>
         ) : (
-          <p className="text-xs text-gray-500 text-center">2026</p>
+          <p className="text-[10px] text-sidebar-muted text-center">2026</p>
         )}
       </div>
     </aside>

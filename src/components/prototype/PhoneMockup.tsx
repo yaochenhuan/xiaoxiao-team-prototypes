@@ -6,15 +6,19 @@ interface PhoneMockupProps {
 export default function PhoneMockup({ title, children }: PhoneMockupProps) {
   return (
     <div className="flex flex-col items-center">
-      <div className="relative bg-gray-900 rounded-[3rem] p-2 shadow-xl">
-        <div className="w-32 h-1 bg-gray-700 rounded-full mb-2" />
-        <div className="bg-white rounded-[2.5rem] overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-[420px] w-[200px] flex flex-col">
+      {/* Phone frame */}
+      <div className="relative bg-gray-900 rounded-[2.5rem] p-2.5 shadow-xl">
+        {/* Notch */}
+        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-900 rounded-b-2xl z-10" />
+        {/* Screen */}
+        <div className="bg-white rounded-[2rem] overflow-hidden w-[240px]">
+          <div className="flex flex-col h-[480px]">
             {children}
           </div>
         </div>
       </div>
-      <p className="mt-3 text-sm text-gray-600 font-medium">{title}</p>
+      {/* Label */}
+      <p className="mt-4 text-sm text-gray-600 font-medium">{title}</p>
     </div>
   )
 }

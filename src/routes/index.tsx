@@ -1,7 +1,6 @@
-import { createBrowserRouter, RouteObject } from 'react-router-dom'
+import { createHashRouter, RouteObject, Navigate } from 'react-router-dom'
 import App from '@/App'
 import FeaturePage from '@/pages/FeaturePage'
-import { features } from '@/data/features'
 
 export const routes: RouteObject[] = [
   {
@@ -9,17 +8,47 @@ export const routes: RouteObject[] = [
     element: <App />,
     children: [
       {
-        path: ':moduleId/:featureId',
+        path: 'homework/homework-correction',
+        element: <FeaturePage />
+      },
+      {
+        path: 'homework/homework-assignment',
+        element: <FeaturePage />
+      },
+      {
+        path: 'homework/wrong-questions',
+        element: <FeaturePage />
+      },
+      {
+        path: 'question-bank/question-list',
+        element: <FeaturePage />
+      },
+      {
+        path: 'question-bank/question-detail',
+        element: <FeaturePage />
+      },
+      {
+        path: 'question-bank/question-generate',
+        element: <FeaturePage />
+      },
+      {
+        path: 'course/course-list',
+        element: <FeaturePage />
+      },
+      {
+        path: 'course/course-detail',
+        element: <FeaturePage />
+      },
+      {
+        path: 'course/lesson-management',
         element: <FeaturePage />
       },
       {
         index: true,
-        element: <FeaturePage />
+        element: <Navigate to="homework/homework-correction" />
       }
     ]
   }
 ]
 
-export const router = createBrowserRouter(routes, {
-  basename: '/xiaoxiao-team-prototypes'
-})
+export const router = createHashRouter(routes)
