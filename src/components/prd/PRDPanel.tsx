@@ -1,6 +1,9 @@
-import { useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import PRDMetaCard from './PRDMetaCard'
 import PRDSection from './PRDSection'
+import PRDMarkdownEditor from './PRDMarkdownEditor'
+import { prdToMarkdown, markdownToPrdSections } from '@/utils/prdToMarkdown'
+import { renderMarkdownToHtml } from '@/utils/markdownRenderer'
 import { Feature } from '@/data/types'
 import { exportPRDToPDF, exportPRDToWord } from '@/utils/exporters'
 
@@ -9,16 +12,51 @@ interface PRDPanelProps {
 }
 
 type ExportingKind = null | 'word' | 'pdf'
+type ViewMode = 'rich' | 'markdown'
+
+const STORAGE_KEY = (id: string) => `prd-markdown-${id}`
 
 export default function PRDPanel({ feature }: PRDPanelProps) {
   const contentRef = useRef<HTMLDivElement>(null)
+  const exportRef = useRef<HTMLDivElement>(null)
   const [exporting, setExporting] = useState<ExportingKind>(null)
+  const [viewMode, setViewMode] = useState<ViewMode>('markdown')
+
+  const initialMarkdown = useMemo(() => {
+    const saved = localStorage.getItem(STORAGE_KEY(feature.id))
+    if (saved) return saved
+    return prdToMarkdown(feature.prd)
+  }, [feature.id])
+
+  const [markdown, setMarkdown] = useState(initialMarkdown)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY(feature.id), markdown)
+  }, [markdown, feature.id])
+
+  const parsedSections = useMemo(() => markdownToPrdSections(markdown), [markdown])
+
+  const displayPrd = useMemo(
+    () => ({
+      ...feature.prd,
+      sections: parsedSections,
+    }),
+    [feature.prd, parsedSections],
+  )
+
+  const displayFeature = useMemo(
+    () => ({
+      ...feature,
+      prd: displayPrd,
+    }),
+    [feature, displayPrd],
+  )
 
   const handleExportWord = async () => {
     if (exporting) return
     setExporting('word')
     try {
-      await exportPRDToWord({ feature })
+      await exportPRDToWord({ feature: displayFeature })
     } catch (err) {
       console.error('导出 Word 失败：', err)
       alert('导出 Word 失败，请重试')
@@ -28,12 +66,13 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
   }
 
   const handleExportPDF = async () => {
-    if (exporting || !contentRef.current) return
+    const element = exportRef.current || contentRef.current
+    if (exporting || !element) return
     setExporting('pdf')
     try {
       const fileName = `${feature.prd.meta.productName}-${feature.prd.meta.featureName}-PRD`
       const title = `${feature.prd.meta.productName} - ${feature.prd.meta.featureName} PRD`
-      await exportPRDToPDF({ element: contentRef.current, fileName, title })
+      await exportPRDToPDF({ element, fileName, title })
     } catch (err) {
       console.error('导出 PDF 失败：', err)
       alert('导出 PDF 失败，请重试')
@@ -43,9 +82,9 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
   }
 
   return (
-    <div className="h-full overflow-y-auto scroll-light bg-white">
+    <div className="h-full flex flex-col bg-white">
       {/* 下载工具栏 */}
-      <div className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-gray-200 px-6 py-2.5 flex items-center justify-between gap-3">
+      <div className="shrink-0 z-20 bg-white/95 backdrop-blur border-b border-gray-200 px-6 py-2.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-xs text-gray-500 min-w-0">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
           <span className="truncate">
@@ -57,6 +96,30 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
           </span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1 p-0.5 bg-gray-100 rounded-lg mr-2">
+            <button
+              type="button"
+              onClick={() => setViewMode('markdown')}
+              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                viewMode === 'markdown'
+                  ? 'bg-white text-brand shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Markdown
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('rich')}
+              className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                viewMode === 'rich'
+                  ? 'bg-white text-brand shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              富文本
+            </button>
+          </div>
           <button
             onClick={handleExportWord}
             disabled={exporting !== null}
@@ -94,16 +157,31 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
         </div>
       </div>
 
-      <div className="p-6" ref={contentRef}>
-        {/* Meta card */}
-        <PRDMetaCard prd={feature.prd} />
-
-        {/* Sections */}
-        <div className="mt-6 space-y-4">
-          {feature.prd.sections.map((section, index) => (
-            <PRDSection key={section.id} section={section} index={index + 1} />
-          ))}
+      {viewMode === 'markdown' ? (
+        <PRDMarkdownEditor value={markdown} onChange={setMarkdown} />
+      ) : (
+        <div className="h-full overflow-y-auto scroll-light">
+          <div className="p-6" ref={contentRef}>
+            <PRDMetaCard prd={feature.prd} />
+            <div className="mt-6 space-y-4">
+              {displayPrd.sections.map((section, index) => (
+                <PRDSection key={section.id} section={section} index={index + 1} />
+              ))}
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Hidden export container: always renders markdown preview for PDF export */}
+      <div
+        ref={exportRef}
+        className="fixed left-0 top-0 w-[794px] bg-white p-8"
+        style={{ position: 'fixed', left: '-9999px', top: 0 }}
+      >
+        <div
+          className="prose prose-sm max-w-none"
+          dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(markdown) }}
+        />
       </div>
     </div>
   )
