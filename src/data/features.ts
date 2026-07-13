@@ -1,4 +1,5 @@
 import { Feature, PRDBlock } from './types'
+import homeworkCorrectionMarkdown from './prd/homework-correction.md?raw'
 
 const p = (text: string): PRDBlock => ({ type: 'paragraph', text })
 const h2 = (text: string): PRDBlock => ({ type: 'heading', level: 2, text })
@@ -24,34 +25,66 @@ export const features: Feature[] = [
     moduleId: 'homework',
     name: '作业订正',
     code: 'HW-001',
-    status: '规划中',
-    version: 'v0.1',
-    updatedAt: '2026-06-23',
+    status: '开发中',
+    version: 'V2.0',
+    updatedAt: '2026-07-09',
     route: 'homework/homework-correction',
     prototypePages: [
       {
-        id: 'page-1',
-        name: '作业列表页',
-        description: '学生查看待订正作业列表',
-        sections: ['头部导航', '作业列表', '状态筛选'],
-        actions: ['点击作业进入详情', '筛选状态'],
-        states: ['空状态', '加载中']
+        id: 'page-student-result',
+        name: '结果页（学生端）',
+        description: '学生提交作业后查看错题、手动订正、打开 AI 助教',
+        sections: ['顶部提示条', '左侧题目列表', '右侧题目详情', 'AI 助教入口'],
+        actions: ['添加订正笔记', '修改错误归因', '打开 AI 助教', '去练习'],
+        states: ['未订正', '订正中', '已订正', '练习未完成']
       },
       {
-        id: 'page-2',
-        name: '作业订正详情页',
-        description: '查看作业详情和订正内容',
-        sections: ['作业信息', '题目列表', '订正区域'],
-        actions: ['提交订正', '查看解析'],
-        states: ['订正成功', '订正失败']
+        id: 'page-teacher-result',
+        name: '结果页（老师端）',
+        description: '老师查看学生作业结果及每道题的订正状态',
+        sections: ['完成状态', '订正状态', '题目列表'],
+        actions: ['切换题目', '查看详情'],
+        states: ['未订正', '订正中', '已订正']
       },
       {
-        id: 'page-3',
-        name: 'AI 订正结果页',
-        description: 'AI 自动批改订正结果',
-        sections: ['批改结果', '错误分析', '改进建议'],
-        actions: ['查看详情', '重新订正'],
-        states: ['批改完成', '批改失败']
+        id: 'page-teacher-detail',
+        name: '作业详情页（老师端）',
+        description: '班级作业列表展示完成状态、订正状态、订正练习状态',
+        sections: ['列表', '完成状态', '订正状态', '订正练习'],
+        actions: ['查看学生作业'],
+        states: ['未开始', '进行中', '已完成']
+      },
+      {
+        id: 'page-ai-chat',
+        name: 'AI 助教自由问答订正',
+        description: '学生在结果页通过 AI 助教面板自由对话完成订正',
+        sections: ['AI 助教面板', '快捷操作', '消息列表'],
+        actions: ['题目讲解', '错误归因', '总结笔记', '订正练习'],
+        states: ['自由对话', '结构化流程']
+      },
+      {
+        id: 'page-correction-flow',
+        name: '订正页面（四步闭环）',
+        description: '仅展示错题，按讲解→归因→笔记→练习四步完成订正',
+        sections: ['题目内容', '步骤指示器', 'AI 助教面板', '上一题/下一题'],
+        actions: ['完成讲解', '确认归因', '提交笔记', '开始练习'],
+        states: ['讲解中', '归因中', '笔记中', '练习推送']
+      },
+      {
+        id: 'page-consolidation',
+        name: '巩固训练—订正练习',
+        description: '巩固训练新增「订正练习」分类，展示订正练习卡片',
+        sections: ['分类标签', '订正练习卡片'],
+        actions: ['开始练习', '提交答卷'],
+        states: ['未开始', '进行中', '已完成']
+      },
+      {
+        id: 'page-notes',
+        name: '笔记模块（学生端）',
+        description: '笔记类型增加「订正笔记」，独立列表管理',
+        sections: ['练习笔记', '订正笔记', '公开笔记', '笔记卡片'],
+        actions: ['切换标签', '新建笔记', '编辑', '删除'],
+        states: ['列表为空', '有笔记']
       }
     ],
     prd: {
@@ -60,29 +93,12 @@ export const features: Feature[] = [
         featureName: '作业订正',
         module: '作业',
         pageCode: 'HW-001',
-        version: 'v0.1',
-        status: '规划中',
-        updatedAt: '2026-06-23'
+        version: 'V2.0',
+        status: '开发可用',
+        updatedAt: '2026-07-09'
       },
-      sections: [
-        { id: 'doc-info', title: '文档信息', content: 'TODO：待根据产品文档补充' },
-        { id: 'background', title: '背景与目标', content: 'TODO：待根据产品文档补充' },
-        { id: 'pain-points', title: '用户痛点', content: 'TODO：待根据产品文档补充' },
-        { id: 'user-roles', title: '用户角色', content: 'TODO：待根据产品文档补充' },
-        { id: 'scope', title: '功能范围', content: 'TODO：待根据产品文档补充' },
-        { id: 'flow', title: '业务流程', content: 'TODO：待根据产品文档补充' },
-        { id: 'page-spec', title: '页面说明', content: 'TODO：待根据产品文档补充' },
-        { id: 'interaction', title: '交互说明', content: 'TODO：待根据产品文档补充' },
-        { id: 'fields', title: '字段说明', content: 'TODO：待根据产品文档补充' },
-        { id: 'data-structure', title: '数据结构', content: 'TODO：待根据产品文档补充' },
-        { id: 'permission', title: '权限规则', content: 'TODO：待根据产品文档补充' },
-        { id: 'exception', title: '异常状态', content: 'TODO：待根据产品文档补充' },
-        { id: 'empty-state', title: '空状态', content: 'TODO：待根据产品文档补充' },
-        { id: 'success-state', title: '成功状态', content: 'TODO：待根据产品文档补充' },
-        { id: 'acceptance', title: '验收标准', content: 'TODO：待根据产品文档补充' },
-        { id: 'roadmap', title: '后续迭代', content: 'TODO：待根据产品文档补充' },
-        { id: 'questions', title: '待确认问题', content: 'TODO：待根据产品文档补充' }
-      ]
+      sections: [],
+      markdown: homeworkCorrectionMarkdown
     }
   },
   {

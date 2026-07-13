@@ -47,6 +47,8 @@ export interface PRD {
     references?: { label: string; url: string }[]
   }
   sections: PRDSection[]
+  /** 原始 Markdown 文档内容（优先于 sections 渲染） */
+  markdown?: string
 }
 
 export interface Feature {

@@ -25,8 +25,9 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
   const initialMarkdown = useMemo(() => {
     const saved = localStorage.getItem(STORAGE_KEY(feature.id))
     if (saved) return saved
+    if (feature.prd.markdown) return feature.prd.markdown
     return prdToMarkdown(feature.prd)
-  }, [feature.id])
+  }, [feature.id, feature.prd])
 
   const [markdown, setMarkdown] = useState(initialMarkdown)
 

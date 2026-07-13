@@ -3,6 +3,7 @@ import { PrototypePage } from '@/data/types'
 import RealExamMockup from './pages/RealExamMockup'
 import BaseTrainingMockup from './pages/BaseTrainingMockup'
 import WrongWordsMockup from './pages/WrongWordsMockup'
+import HomeworkCorrectionMockup from './pages/HomeworkCorrectionMockup'
 
 interface PrototypeCardProps {
   page: PrototypePage
@@ -19,6 +20,11 @@ export default function PrototypeCard({ page, featureId, featureCode, pageIndex 
     if (pageIndex === 1) return <RealExamMockup featureCode={featureCode} pageIndex={pageIndex} />
     if (pageIndex === 2) return <BaseTrainingMockup featureCode={featureCode} pageIndex={pageIndex} />
     if (pageIndex === 3) return <WrongWordsMockup featureCode={featureCode} pageIndex={pageIndex} />
+  }
+
+  // 作业订正功能使用 PC 端 mockup
+  if (featureId === 'homework-correction') {
+    return <HomeworkCorrectionMockup />
   }
 
   // 其他功能使用手机 mockup
