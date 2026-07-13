@@ -24,7 +24,64 @@ export default function PrototypeCard({ page, featureId, featureCode, pageIndex 
 
   // 作业订正功能使用 PC 端 mockup
   if (featureId === 'homework-correction') {
-    return <HomeworkCorrectionMockup />
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-md bg-brand/10 text-brand text-xs font-bold flex items-center justify-center">
+              {pageIndex}
+            </span>
+            <span className="text-sm font-semibold text-gray-800">{page.name}</span>
+          </div>
+          <span className="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
+            {featureCode}-{String(pageIndex).padStart(2, '0')}
+          </span>
+        </div>
+
+        <div className="mb-5">
+          <HomeworkCorrectionMockup page={page} />
+        </div>
+
+        {page.sections && page.sections.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {page.sections.map((section, index) => (
+              <span
+                key={index}
+                className="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded border border-gray-100"
+              >
+                {section}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {page.actions && page.actions.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {page.actions.map((action, index) => (
+              <span
+                key={index}
+                className="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded border border-blue-100"
+              >
+                {action}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {page.states && page.states.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {page.states.map((state, index) => (
+              <span
+                key={index}
+                className="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded border border-green-100"
+              >
+                {state}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    )
   }
 
   // 其他功能使用手机 mockup

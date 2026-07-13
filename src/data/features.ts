@@ -56,30 +56,78 @@ export const features: Feature[] = [
       },
       {
         id: 'page-ai-chat',
-        name: 'AI 助教自由问答订正',
+        name: 'AI 助教自由问答订正（结果页）',
         description: '学生在结果页通过 AI 助教面板自由对话完成订正',
         sections: ['AI 助教面板', '快捷操作', '消息列表'],
         actions: ['题目讲解', '错误归因', '总结笔记', '订正练习'],
         states: ['自由对话', '结构化流程']
       },
       {
-        id: 'page-correction-flow',
-        name: '订正页面（四步闭环）',
+        id: 'page-correction-page',
+        name: '订正页面（仅错题）',
         description: '仅展示错题，按讲解→归因→笔记→练习四步完成订正',
-        sections: ['题目内容', '步骤指示器', 'AI 助教面板', '上一题/下一题'],
+        sections: ['题目内容区域', '订正步骤指示器', 'AI 助教面板', '上一题/下一题'],
         actions: ['完成讲解', '确认归因', '提交笔记', '开始练习'],
         states: ['讲解中', '归因中', '笔记中', '练习推送']
       },
       {
-        id: 'page-consolidation',
-        name: '巩固训练—订正练习',
-        description: '巩固训练新增「订正练习」分类，展示订正练习卡片',
+        id: 'page-correction-welcome',
+        name: '手动点击“题目订正”，进入订正流程（步骤 0）',
+        description: 'AI 助教订正欢迎页，展示四步流程',
+        sections: ['欢迎语', '订正流程展示'],
+        actions: ['开始订正'],
+        states: ['未开始']
+      },
+      {
+        id: 'page-explanation',
+        name: '题目讲解（步骤 1）',
+        description: 'AI 自动讲解当前错题知识点与解题思路',
+        sections: ['知识点', '题目分析', '正确答案', '学生错因', '解题技巧'],
+        actions: ['完成讲解，进入下一步'],
+        states: ['讲解中', '讲解完成']
+      },
+      {
+        id: 'page-attribution',
+        name: '确认错误归因（步骤 2）',
+        description: 'AI 总结错误原因，学生确认或选择其他原因',
+        sections: ['归因标题', '归因总结', '归因详情', '确认/不太对按钮', '归因选择弹窗'],
+        actions: ['确认', '不太对', '选择归因', '自定义输入'],
+        states: ['待确认', '已确认']
+      },
+      {
+        id: 'page-notes-summary',
+        name: '总结笔记（步骤 3）',
+        description: '引导学生按 3 个方面写订正笔记并自动提交',
+        sections: ['笔记思考提示', '学生笔记内容', '自动提交卡片'],
+        actions: ['发送笔记', '提交'],
+        states: ['编辑中', '已提交']
+      },
+      {
+        id: 'page-practice-push',
+        name: '订正练习推送（步骤 4）',
+        description: '全部错题订正完成后推送同类题练习',
+        sections: ['订正完成提示', '练习说明', '开始练习按钮', '结果页提示条'],
+        actions: ['开始练习', '关闭提示条'],
+        states: ['未开始', '进行中', '已完成']
+      },
+      {
+        id: 'page-consolidation-real',
+        name: '巩固训练（真题）— 订正练习',
+        description: '巩固训练新增「订正练习」分类，展示真题订正练习卡片',
         sections: ['分类标签', '订正练习卡片'],
         actions: ['开始练习', '提交答卷'],
         states: ['未开始', '进行中', '已完成']
       },
       {
-        id: 'page-notes',
+        id: 'page-consolidation-word',
+        name: '巩固训练（单词）— 订正练习',
+        description: '单词作业巩固训练新增「订正练习」分类',
+        sections: ['分类标签', '订正练习卡片'],
+        actions: ['开始练习', '提交答卷'],
+        states: ['未开始', '进行中', '已完成']
+      },
+      {
+        id: 'page-notes-module',
         name: '笔记模块（学生端）',
         description: '笔记类型增加「订正笔记」，独立列表管理',
         sections: ['练习笔记', '订正笔记', '公开笔记', '笔记卡片'],
