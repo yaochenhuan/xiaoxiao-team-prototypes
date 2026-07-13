@@ -23,9 +23,10 @@ export default function PRDPanel({ feature }: PRDPanelProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('markdown')
 
   const initialMarkdown = useMemo(() => {
+    // 优先使用功能定义中的源 Markdown，避免旧本地缓存覆盖新文档
+    if (feature.prd.markdown) return feature.prd.markdown
     const saved = localStorage.getItem(STORAGE_KEY(feature.id))
     if (saved) return saved
-    if (feature.prd.markdown) return feature.prd.markdown
     return prdToMarkdown(feature.prd)
   }, [feature.id, feature.prd])
 
